@@ -6,7 +6,7 @@ public class Staff {
         this.product = product;
     }
 
-    public void addToBuffet(Buffet buffet,int quantity) {
+    public synchronized void addToBuffet(Buffet buffet,int quantity) {
         switch(product) {
             case Product.TEA :
                 buffet.addTea(quantity);

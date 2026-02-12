@@ -10,39 +10,27 @@ public class Buffet {
         this.cake = cake;
     }
 
-    public int getTea() {
+    public synchronized int getTea() {
         return tea;
     }
 
-    public void addTea(int nbTea) {
+    public synchronized void addTea(int nbTea) {
         tea += nbTea;
     }
 
-    public int getCoffee() {
+    public synchronized int getCoffee() {
         return coffee;
     }
 
-    public void addCoffee(int nbCoffee) {
+    public synchronized void addCoffee(int nbCoffee) {
         coffee += nbCoffee;
     }
 
-    public int getCake() {
+    public synchronized int getCake() {
         return cake;
     }
 
-    public void addCake(int nbCake) {
+    public synchronized void addCake(int nbCake) {
         cake += nbCake;
-    }
-
-    public void setTea(int tea) {
-        this.tea = tea;
-    }
-
-    public void setCoffee(int coffee) {
-        this.coffee = coffee;
-    }
-
-    public void setCake(int cake) {
-        this.cake = cake;
     }
 }
