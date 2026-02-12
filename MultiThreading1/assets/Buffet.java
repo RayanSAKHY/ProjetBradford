@@ -28,4 +28,16 @@ public class Buffet {
     public synchronized void addCake(int nbCake) {
         cake += nbCake;
     }
+
+    public void setTea(int tea) {
+        this.tea = tea;
+    }
+
+    public void setCoffee(int coffee) {
+        this.coffee = coffee;
+    }
+
+    public void setCake(int cake) {
+        this.cake = cake;
+    }
 }
