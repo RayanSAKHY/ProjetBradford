@@ -1,5 +1,4 @@
-namespace assets;
-
+package assets;
 public class Staff {
     private Product product;
 
@@ -7,10 +6,10 @@ public class Staff {
         this.product = product;
     }
 
-    public synchronized addToBuffet(Buffet buffet,Product product,int quantity) {
+    public void addToBuffet(Buffet buffet,int quantity) {
         switch(product) {
             case Product.TEA :
-                buffet.addTea(quantiity);
+                buffet.addTea(quantity);
                 break;
             case Product.COFFEE:
                 buffet.addCoffee(quantity);

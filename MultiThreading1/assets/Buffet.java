@@ -1,5 +1,4 @@
-namespace assets;
-
+package assets;
 public class Buffet {
     private int tea = 0;
     private int coffee = 0;
@@ -11,27 +10,27 @@ public class Buffet {
         this.cake = cake;
     }
 
-    public synchronized int getTea() {
+    public int getTea() {
         return tea;
     }
 
-    public synchronized void addTea(int nbTea) {
+    public void addTea(int nbTea) {
         tea += nbTea;
     }
 
-    public synchronized int getCoffee() {
+    public int getCoffee() {
         return coffee;
     }
 
-    public synchronized void addCoffee(int nbCoffee) {
+    public void addCoffee(int nbCoffee) {
         coffee += nbCoffee;
     }
 
-    public synchronized int getCake() {
+    public int getCake() {
         return cake;
     }
 
-    public synchronized void addCake(int nbCake) {
+    public void addCake(int nbCake) {
         cake += nbCake;
     }
 

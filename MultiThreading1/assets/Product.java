@@ -1,5 +1,4 @@
-namespace assets;
-
+package assets;
 public enum Product {
     TEA,
     COFFEE,
