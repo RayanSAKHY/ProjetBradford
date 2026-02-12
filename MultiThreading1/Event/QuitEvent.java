@@ -1,4 +1,4 @@
-package Event
+package Event;
 
-public class QuitEvent  implements Event {
+public class QuitEvent implements IEvent {
 }

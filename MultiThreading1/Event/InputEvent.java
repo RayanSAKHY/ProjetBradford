@@ -1,6 +1,6 @@
 package Event;
 
-public class InputEvent implements Event {
+public class InputEvent implements IEvent {
     String info;
 
     public InputEvent(String info) {
