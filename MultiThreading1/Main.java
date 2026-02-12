@@ -1,6 +1,10 @@
 import assets.*;
 import Utils.*;
 import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import Event.*;
+import Thread.*;
 
 public class Main {
     private int nbClient;
@@ -8,23 +12,39 @@ public class Main {
     private static Buffet buffet;
     private static RandomNumberGen gen;
     private ExecutionTime execTime;
-    private IOCommunication log = new IOCommunication();
+    private static BlockingQueue<IEvent> queue = new LinkedBlockingQueue<>();
+    private static volatile boolean running = true; /*i have found information about that
+    in this site: https://www.datacamp.com/doc/java/volatile */
 
-    public static void main(String[] args) throws IOException {
-        Main app = new Main();
+    public static void main(String[] args) {
+
+        Thread inputThread = new Thread(new InputRunnable(queue,running));
+        inputThread.start();
+
         Main.gen = new RandomNumberGen(13253);
-        app.run();
+
+        while (running) {
+            try {
+                IEvent e = queue.take();
+                if (e instanceof QuitEvent) {
+                    running = false;
+                } else {
+                    System.out.println("Reçu : " + e);
+                }
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        System.out.println("Programme terminé");
+
+        Main app = new Main();
+        app.test();
     }
 
-    public void run() throws IOException{
+    public void test(){
 
         execTime = new ExecutionTime(gen,1);
-
-        nbClient = log.Ask("How many customer do you want ?");
-        System.out.println("Number of customer :" + nbClient);
-
-        nbStaff = log.Ask("How many staff do you want ?");
-        System.out.println("Number of customer :" + nbStaff);
 
         Staff staff1 = new Staff(Product.TEA);
         Staff staff2 = new Staff(Product.CAKE);
@@ -43,6 +63,5 @@ public class Main {
         System.out.println("buffet cake : " + buffet.getCake());
         System.out.println("buffet coffee : " + buffet.getCoffee());
         System.out.println("buffet tea : " + buffet.getTea());
-
     }
 }
