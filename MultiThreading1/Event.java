@@ -1,9 +1,7 @@
-package Event;
-
 public class Event {
     String info;
 
-    public InputEvent(String info) {
+    public Event(String info) {
         this.info = info;
     }
 
