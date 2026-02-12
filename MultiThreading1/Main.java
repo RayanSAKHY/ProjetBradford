@@ -10,8 +10,8 @@ public class Main {
     private int nbClient;
     private int nbStaff;
     private static Buffet buffet;
-    private static RandomNumberGen gen;
-    private ExecutionTime execTime;
+    private static RandomNumberGen gen = new RandomNumberGen(13253);
+    private static ExecutionTime execTime = new ExecutionTime(gen,1);
     private static BlockingQueue<IEvent> queue = new LinkedBlockingQueue<>();
     private static volatile boolean running = true; /*i have found information about that
     in this site: https://www.datacamp.com/doc/java/volatile */
@@ -21,15 +21,29 @@ public class Main {
         Thread inputThread = new Thread(new InputRunnable(queue,running));
         inputThread.start();
 
-        Main.gen = new RandomNumberGen(13253);
-
         while (running) {
             try {
                 IEvent e = queue.take();
                 if (e instanceof QuitEvent) {
                     running = false;
-                } else {
-                    System.out.println("Reçu : " + e);
+                }
+                else if (e instanceof InputEvent){
+                    switch(e.getInfo()) {
+                        case "f":
+                            execTime.speedDown();
+                            System.out.println("Speed Down");
+                            break;
+                        case "h":
+                            execTime.speedUp();
+                            System.out.println("Speed Up");
+                            break;
+                        case "g":
+                            System.out.println("Adding a new client");
+                            break;
+                        default:
+                            break;
+                    }
+                    System.out.println("InputEvent Recu : " + e.getInfo());
                 }
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
@@ -43,8 +57,6 @@ public class Main {
     }
 
     public void test(){
-
-        execTime = new ExecutionTime(gen,1);
 
         Staff staff1 = new Staff(Product.TEA);
         Staff staff2 = new Staff(Product.CAKE);
