@@ -29,7 +29,7 @@ public class Client {
                 output = "coffee";
             }
             else {
-                ourput = "tea";
+                output = "tea";
             }
         }
         else {
