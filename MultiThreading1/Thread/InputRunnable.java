@@ -18,7 +18,7 @@ public class InputRunnable implements Runnable {
         Scanner scanner = new Scanner(System.in);
         while (running) {
             String line = scanner.nextLine();
-            if (line.equalsIgnoreCase("quit") || line.equalsIgnoreCase("exit")) {
+            if (line.equalsIgnoreCase("q") || line.equalsIgnoreCase("exit") || line.equalsIgnoreCase("quit")) {
                 running = false;
                 queue.offer(new QuitEvent());
             } else {
