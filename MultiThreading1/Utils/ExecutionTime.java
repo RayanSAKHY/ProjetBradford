@@ -10,11 +10,11 @@ public class ExecutionTime {
     }
 
     public void speedUp() {
-        speed++;
+        speed*=2;
     }
 
     public void speedDown() {
-        speed--;
+        speed/=2;
     }
 
     public int getSpeed() {
@@ -22,6 +22,6 @@ public class ExecutionTime {
     }
 
     public double getExecutionTime() {
-        return gen.getRandomNumber(5000)/speed;
+        return gen.getRandomNumber(15000)/speed;
     }
 }
