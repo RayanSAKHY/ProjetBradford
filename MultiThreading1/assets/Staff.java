@@ -11,19 +11,22 @@ public class Staff {
     }
 
     public String toString(){
+        String s = "";
         switch(product) {
             case Product.TEA:
-                return "tea";
+                s ="tea";
                 break;
             case Product.COFFEE:
-                return "coffee";
+                s = "coffee";
                 break;
             case Product.CAKE:
-                return "cake";
+                s = "cake";
                 break;
             default:
                 break;
         }
+        System.out.println("test : "+s);
+        return s;
     }
 
     public synchronized void addToBuffet(Buffet buffet,int quantity) {
