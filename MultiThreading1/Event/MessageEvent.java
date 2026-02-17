@@ -132,6 +132,26 @@ public class MessageEvent implements IEvent {
             case Categorie.LOG:
                 sb.append(name);
                 break;
+            case Categorie.WAIT:
+                sb.append(name).append(" waits in the queue for the ");
+                sb.append(contents.elementAt(0));
+                break;
+            case Categorie.PIANOQUEUE:
+                sb.append("Queue for the piano: ");
+                int i = 0;
+                while(it.hasNext()) {
+                    String temp = it.next();
+                    sb.append(i).append(": ");
+                    sb.append(temp).append(" ");
+                }
+            case Categorie.BUFFETQUEUE:
+                sb.append("Queue for the buffet: ");
+                int i = 0;
+                while(it.hasNext()) {
+                    String temp = it.next();
+                    sb.append(i).append(": ");
+                    sb.append(temp).append(" ");
+                }
             default:
                 break;
         }
