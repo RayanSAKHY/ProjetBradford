@@ -19,14 +19,15 @@ public class Main {
     in this site: https://www.datacamp.com/doc/java/volatile */
 
     public static void main(String[] args){
+        Main app = new Main();
+        app.Init();
+        app.test();
+
         Thread inputThread = new Thread(new InputRunnable(commandQueue,running));
         Thread outputThread = new Thread(new WriterRunnable(messageQueue,buffet));
         outputThread.start();
         inputThread.start();
 
-        Main app = new Main();
-        app.Init();
-        app.test();
 
         while (running) {
             try {
@@ -62,11 +63,18 @@ public class Main {
     }
 
     public void Init(){
-        try {
-            messageQueue.put(new MessageEvent(Categorie.WANT, "coffee,cake", "Client-0"));
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        Scanner sc = new Scanner(System.in);
+        System.out.print("How many clients do you want ? ");
+        nbClient = sc.nextInt();
+        System.out.print("How many staffs do you want ? ");
+        nbStaff = sc.nextInt();
+        System.out.print("How many tea do you want initially ? ");
+        int nbTea = sc.nextInt();
+        System.out.print("How many cakes do you want initially ? ");
+        int nbCake = sc.nextInt();
+        System.out.print("How many coffee do you want initially ? ");
+        int nbCoffee = sc.nextInt();
+        buffet = new Buffet(nbTea,nbCoffee,nbCake);
     }
 
     public void test(){
@@ -75,7 +83,6 @@ public class Main {
         Staff staff2 = new Staff(Product.CAKE);
         Staff staff3 = new Staff(Product.COFFEE);
         Client cliet1 = new Client();
-        buffet = new Buffet(2,2,2);
 
         System.out.println("buffet cake : " + buffet.getCake());
         System.out.println("buffet coffee : " + buffet.getCoffee());
