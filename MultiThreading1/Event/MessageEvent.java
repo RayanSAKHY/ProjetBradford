@@ -27,6 +27,8 @@ public class MessageEvent implements IEvent {
     public MessageEvent(Categorie categorie,String name) {
         this(categorie,"",name,0,null);
     }
+
+    public MessageEvent(Categorie categorie,String content) {this(categorie,content,"",0,null);}
     public MessageEvent(Categorie categorie,String name,int number) {
         this(categorie,"",name,number,null);
     }
@@ -127,6 +129,9 @@ public class MessageEvent implements IEvent {
                 break;
             case Categorie.KITCHEN:
                 sb.append(name).append(" returns to kitchen.");
+                break;
+            case Categorie.LOG:
+                sb.append(contents.elementAt(0));
                 break;
             default:
                 break;
