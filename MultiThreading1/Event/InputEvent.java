@@ -7,6 +7,7 @@ public class InputEvent implements IEvent {
         this.info = info;
     }
 
+    @Override
     public String getInfo() {
         return info;
     }
