@@ -9,11 +9,34 @@ public class MessageEvent implements IEvent {
     private Vector<String> contents = new Vector<>();
     private Categorie categorie;
     private String name;
+    private int number;
+    private Buffet buffet;
 
     public MessageEvent(Categorie categorie, String content,String name) {
+        this(categorie,content,name,0);
+    }
+
+    public MessageEvent(Categorie categorie, String content,String name,int number) {
+        this(categorie,content,name,number,null);
+    }
+
+    public MessageEvent(Categorie categorie,Buffet buffet) {
+        this(categorie,"","",0,buffet);
+    }
+
+    public MessageEvent(Categorie categorie,String name) {
+        this(categorie,"",name,0,null);
+    }
+    public MessageEvent(Categorie categorie,String name,int number) {
+        this(categorie,"",name,number,null);
+    }
+
+    public MessageEvent(Categorie categorie, String content,String name,int number,Buffet buffet) {
         this.categorie = categorie;
         contents.addAll(Arrays.asList(content.split(",")));
         this.name=name;
+        this.number=number;
+        this.buffet = buffet;
     }
 
     @Override
@@ -29,15 +52,83 @@ public class MessageEvent implements IEvent {
                 sb.append(name).append(" ");
                 sb.append("wants ");
                 while (it.hasNext()) {
-                    sb.append(it.next());
+                    String temp = it.next();
+                    if (temp.equals("piano")) {
+                        sb.append("to play ");
+                    }
+                    sb.append(temp);
                     if (it.hasNext()) {
                         sb.append(" and ");
                     }
                 }
                 sb.append(".");
                 break;
+            case Categorie.PLAY:
+                sb.append(name).append(" plays the piano for ");
+                sb.append(number).append("ms.");
+                break;
+            case Categorie.TAKE:
+                sb.append(name).append(" takes ");
+                boolean eat = false;
+                while (it.hasNext()) {
+                    String temp = it.next();
+                    sb.append(temp);
+                    if (it.hasNext()) {
+                        sb.append(" and ");
+                    }
+                    if (temp.equals("cake")) {
+                        eat = true;
+                    }
+                }
+                sb.append(" and ");
+                if (eat) {
+                    sb.append("eats for ");
+                }
+                else {
+                    sb.append("drinks for ");
+                }
+                sb.append(number).append("ms.");
+                break;
+            case Categorie.BUFFET:
+                sb.append(" Buffet = (");
+                sb.append(buffet.getCake()).append(" cakes, ");
+                sb.append(buffet.getTea()).append(" teas, ");
+                sb.append(buffet.getCoffee()).append(" coffees).");
+                break;
+            case Categorie.LISTEN:
+                sb.append(name).append(" listens to music for ");
+                sb.append(number).append("ms.");
+                break;
+            case Categorie.END:
+                sb.append(name).append(" finished ");
+                switch (contents.elementAt(0)) {
+                    case "piano":
+                        sb.append("playing the piano.");
+                        break;
+                    case "music":
+                        sb.append("listening music");
+                        break;
+                    case "eat":
+                        sb.append("eating.");
+                        break;
+                    case "drink":
+                        sb.append("drinking.");
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case Categorie.STAFF:
+                sb.append(name).append(" brings ");
+                sb.append(number).append(" ");
+                sb.append(contents.elementAt(0));
+                if (number >1) sb.append("s");
+                sb.append(".");
+                break;
+            case Categorie.KITCHEN:
+                sb.append(name).append(" returns to kitchen.");
+                break;
             default:
-                sb.append("Not codede yet.");
                 break;
         }
         return sb.toString();
