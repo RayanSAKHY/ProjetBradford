@@ -21,13 +21,14 @@ public class Main {
     public static void main(String[] args){
         Main app = new Main();
         app.Init();
-        app.test();
+        //app.test();
 
         Thread inputThread = new Thread(new InputRunnable(commandQueue,running));
         Thread outputThread = new Thread(new WriterRunnable(messageQueue,buffet));
         outputThread.start();
         inputThread.start();
 
+        app.testMessage();
 
         while (running) {
             try {
@@ -95,5 +96,24 @@ public class Main {
         System.out.println("buffet cake : " + buffet.getCake());
         System.out.println("buffet coffee : " + buffet.getCoffee());
         System.out.println("buffet tea : " + buffet.getTea());
+    }
+
+    public void testMessage() {
+        try {
+            messageQueue.put( new MessageEvent(Categorie.WANT,"piano","Client-0"));
+            messageQueue.put( new MessageEvent(Categorie.PLAY,"CLient-1",(int)execTime.getExecutionTime()));
+            messageQueue.put( new MessageEvent(Categorie.TAKE,"coffee,cake","Client-2",(int)execTime.getExecutionTime()));
+            messageQueue.put( new MessageEvent(Categorie.BUFFET,buffet));
+            messageQueue.put( new MessageEvent(Categorie.LISTEN,"Client-3",(int)execTime.getExecutionTime()));
+            messageQueue.put( new MessageEvent(Categorie.END,"drink","Client-4"));
+            messageQueue.put( new MessageEvent(Categorie.END,"eat","Client-4"));
+            messageQueue.put( new MessageEvent(Categorie.END,"piano","Client-4"));
+            messageQueue.put( new MessageEvent(Categorie.END,"music","Client-4"));
+            messageQueue.put( new MessageEvent(Categorie.STAFF,"tea","Staff-0",3));
+            messageQueue.put( new MessageEvent(Categorie.KITCHEN,"Staff-1"));
+        }
+        catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
     }
 }
