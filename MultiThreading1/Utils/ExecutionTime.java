@@ -22,6 +22,6 @@ public class ExecutionTime {
     }
 
     public double getExecutionTime() {
-        return gen.getRandomNumber(1000)/speed;
+        return gen.getRandomNumber(5000)/speed;
     }
 }
