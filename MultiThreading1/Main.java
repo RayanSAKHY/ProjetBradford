@@ -73,10 +73,16 @@ public class Main {
             }
         }
 
-        System.out.println("Programme terminé");
+        System.out.println("The end of the simulation");
     }
 
     public void Init(){
+        System.out.println("Here the control for this simulation :");
+        System.out.println("-f : Speed Down");
+        System.out.println("-g : Adding a new client");
+        System.out.println("-h : Speed Up");
+        System.out.println("-t : Show current speed");
+        System.out.println("-q or quit or exit : exit the simulation");
         Scanner sc = new Scanner(System.in);
         System.out.print("How many clients do you want ? ");
         nbClient = sc.nextInt();
