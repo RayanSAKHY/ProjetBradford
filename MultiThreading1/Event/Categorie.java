@@ -9,5 +9,6 @@ public enum Categorie {
     END,
     STAFF,
     LISTEN,
-    WAIT
+    WAIT,
+    KITCHEN
 }
