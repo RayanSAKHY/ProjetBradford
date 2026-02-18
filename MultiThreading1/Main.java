@@ -6,11 +6,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 import Event.*;
 import Thread.*;
 import java.util.Vector;
+import java.util.Map;
 
 public class Main {
     private int nbClient;
     private int nbStaff;
-    private static Buffet buffet;
+    private static volatile Buffet buffet;
 
     private static RandomNumberGen gen = new RandomNumberGen(13253);
     private static ExecutionTime execTime = new ExecutionTime(gen,1);
@@ -18,8 +19,6 @@ public class Main {
     private static BlockingQueue<MessageEvent> messageQueue = new LinkedBlockingQueue<>();
     private static volatile boolean running = true; /*i have found information about that
     in this site: https://www.datacamp.com/doc/java/volatile */
-    private static  volatile Map<Int,String> pianoQueue = new Map<>();
-    private static volatile Map<Int,String> buffetQueue = new Map<>();
 
     public static void main(String[] args){
         Main app = new Main();
@@ -35,8 +34,12 @@ public class Main {
         //app.testMessage();
 
         app.staffThreadInit(staffThreadList);
+        app.clientThreadInit(clientThreadList);
 
         for(Thread t : staffThreadList) {
+            t.start();
+        }
+        for(Thread t : clientThreadList) {
             t.start();
         }
 
@@ -47,6 +50,9 @@ public class Main {
                     running = false;
                     outputThread.interrupt();
                     for(Thread t : staffThreadList) {
+                        t.interrupt();
+                    }
+                    for(Thread t : clientThreadList) {
                         t.interrupt();
                     }
                 }
@@ -62,7 +68,13 @@ public class Main {
                             break;
                         case "t":
                             messageQueue.put(new MessageEvent(Categorie.LOG,"Current Speed : "+execTime.getSpeed()));
+                            break;
+                        case "b":
+                            messageQueue.put(new MessageEvent(Categorie.BUFFET,buffet));
+                            break;
                         case "g":
+                            int capa = app.addClient(clientThreadList);
+                            clientThreadList.get(capa).start();
                             messageQueue.put(new MessageEvent(Categorie.LOG,"Adding a new client"));
                             break;
                         default:
@@ -84,6 +96,7 @@ public class Main {
         System.out.println("-g : Adding a new client");
         System.out.println("-h : Speed Up");
         System.out.println("-t : Show current speed");
+        System.out.println("-b : Show current buffet");
         System.out.println("-q or quit or exit : exit the simulation");
         Scanner sc = new Scanner(System.in);
         System.out.print("How many clients do you want ? ");
@@ -111,6 +124,29 @@ public class Main {
                     messageQueue),name));
         }
     }
+
+    public void clientThreadInit(Vector<Thread> list) {
+        for (int i = 0; i<nbClient;i++) {
+            Client client = new Client();
+            String name = "Client-"+i;
+
+            list.add(new Thread(new ClientRunnable(buffet,
+                    client,execTime, gen,
+                    messageQueue),name));
+        }
+    }
+
+    public int addClient(Vector<Thread> list) {
+        int capa = list.size();
+        Client client = new Client();
+        String name = "Client-"+capa;
+
+        list.add(new Thread(new ClientRunnable(buffet,
+                client,execTime, gen,
+                messageQueue),name));
+        return capa;
+    }
+
     public void test(){
 
         Staff staff1 = new Staff(Product.TEA);
