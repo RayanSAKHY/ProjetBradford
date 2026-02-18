@@ -4,29 +4,25 @@ import assets.*;
 import Utils.*;
 import Event.*;
 import java.util.concurrent.BlockingQueue;
-import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ClientRunnable implements Runnable{
-    private Buffet buffet;
+    private static volatile Buffet buffet;
     private Client client;
-    private static  volatile Map<Int,String> pianoQueue;
-    BlockingQueue<String> buffetQueue = new LinkedBlockingQueue<>();
-    private boolean volatile running = true;
+    private volatile boolean running = true;
     private ExecutionTime execTime;
     private RandomNumberGen genAlea;
     private BlockingQueue<MessageEvent> messageQueue;
-    private static int volatile nbPiano = 2;
+    private static volatile int nbPiano = 2;
+    private final ReentrantLock Lock = new ReentrantLock();
 
     public ClientRunnable(Buffet buffet,Client client, ExecutionTime execTime,RandomNumberGen genAlea,
-                          BlockingQueue<MessageEvent> messageQueue,
-                          Map<Int,String> pianoQueue,Map<Int,String> buffetQueue) {
+                          BlockingQueue<MessageEvent> messageQueue) {
         this.buffet = buffet;
         this.client = client;
         this.execTime = execTime;
         this.genAlea = genAlea;
         this.messageQueue = messageQueue;
-        this.pianoQueue = pianoQueue;
-        this.buffetQueue = buffetQueue;
     }
 
     @Override
@@ -37,9 +33,14 @@ public class ClientRunnable implements Runnable{
                 double nbAlea = genAlea.getProba();
                 if (nbAlea >0.5) {
                     consume(threadName);
+                    entertain(threadName);
+                }
+                else {
+                    entertain(threadName);
+                    consume(threadName);
                 }
             }
-            catch (InteruptedException ex) {
+            catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 running = false;
             }
@@ -48,31 +49,91 @@ public class ClientRunnable implements Runnable{
 
     private void consume(String name) throws InterruptedException{
         double nbAlea = genAlea.getProba();
-        String content = client.consume(nbAlea);
+        int[] quantities = new int[2];
+        for (int i = 0; i < 2; i++) {
+            quantities[i]=genAlea.getRandomNumber(5);
+            if (quantities[i] == 0) {
+                quantities[i] = 1;
+            }
+        }
+        String content = consume(nbAlea,quantities);
         messageQueue.put( new MessageEvent(Categorie.WANT,content,name));
 
-        if(buffet.tryUse()) {
-            try {
-                takeFromBuffet(content);
-                messageQueue.put( new MessageEvent(Categorie.TAKE,content,name,
-                        (int)execTime.getExecutionTime()));
-            } finally {
-                buffet.release();
+        try {
+            boolean hasWaited = false;
+            if (!buffet.tryUse()) {
+                messageQueue.put(new MessageEvent(Categorie.WAIT,"buffet", name));
             }
-        } else {
-            if (!buffetQueue.isEmpty()) {
-
-                String nextClient = buffetQueue.poll();
-                messageQueue.put(new MessageEvent(
-                        Categorie.END,
-                        "Next: " + nextClient,
-                        nextClient
-                ));
+            else {
+                if (hasWaited) {
+                    messageQueue.put(new MessageEvent(Categorie.WAIT, "buffet", name));
+                    hasWaited = false;
+                }
+                try {
+                    int time = (int)execTime.getExecutionTime();
+                    takeFromBuffet(content,buffet);
+                    messageQueue.put( new MessageEvent(Categorie.TAKE,content,name, time));
+                    Thread.sleep(time);
+                    String id = "drink";
+                    if (content.contains("cake")) {
+                        id = "eat";
+                    }
+                    messageQueue.put(new MessageEvent(Categorie.END,id,name));
+                } finally {
+                    buffet.release();
+                }
             }
+        }
+        catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            running = false;
         }
     }
 
     private void entertain(String name) throws InterruptedException{
+        double nbAlea = genAlea.getProba();
+
+        String content = entertain(nbAlea);
+        int time = (int)execTime.getExecutionTime();
+        try {
+            switch(content) {
+                case "piano":
+                    messageQueue.put( new MessageEvent(Categorie.WANT,content,name));
+                    boolean hasWaited = false;
+                    if (!Lock.tryLock() || nbPiano <= 0) {
+                        messageQueue.put(new MessageEvent(Categorie.WAIT, "piano", name));
+                        hasWaited = false;
+                    }
+                    else {
+                        if (hasWaited) {
+                            messageQueue.put(new MessageEvent(Categorie.END,"wait",name));
+                            hasWaited = false;
+                        }
+                        try {
+                            nbPiano--;
+                            messageQueue.put( new MessageEvent(Categorie.PLAY,name,time));
+                            Thread.sleep(time);
+                            messageQueue.put(new MessageEvent(Categorie.END,content,name));
+                        } finally {
+                            nbPiano++;
+                            Lock.unlock();
+                        }
+                    }
+
+                    break;
+                case "music":
+                    messageQueue.put( new MessageEvent(Categorie.LISTEN,name,
+                            time));
+                    Thread.sleep(time);
+                    break;
+                default:
+                    break;
+            }
+        }
+        catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            running = false;
+        }
 
     }
 
@@ -87,52 +148,54 @@ public class ClientRunnable implements Runnable{
         return output;
     }
 
-    private String consume(double nbAlea) throws InterruptedException{
+    private String consume(double nbAlea,int[] quantities) throws InterruptedException{
         String output = "";
         if (nbAlea > 0.5) {
             if (nbAlea > 0.75) {
-                output = "coffee";
+                output = quantities[0] +" coffee";
             }
             else {
-                output = "tea";
+                output = quantities[0] +" tea";
             }
         }
         else {
             if ( nbAlea > 0.33) {
-                output = "cake";
+                output = quantities[0] + " cake";
             }
             else if (nbAlea > 0.165) {
-                output = "cake,coffee";
+                output = quantities[0] +" cake,"+quantities[1] +" coffee";
             }
             else {
-                output = "cake,tea";
+                output = quantities[0] +" cake,"+quantities[1] +" tea";
             }
         }
 
         return output;
     }
 
-    private void takeFromBuffet(String content) {
+    private void takeFromBuffet(String content,Buffet buffet) {
         String[] mots = content.split(",");
         for (String mot:mots){
-            int quantity = genAlea.getRandomNumber(5);
             boolean verif;
-            switch (mot){
+            String product = mot.split(" ")[1];
+            int quantity = Integer.parseInt(mot.split(" ")[0]);
+
+            switch (product){
                 case "coffee":
                     do {
-                        verif = buffet.takeProduct(COFFEE,quantity)
+                        verif = buffet.takeProduct(Product.COFFEE,quantity);
                     }
                     while (!verif);
                     break;
                 case "tea":
                     do {
-                        verif = buffet.takeProduct(TEA,quantity)
+                        verif = buffet.takeProduct(Product.TEA,quantity);
                     }
                     while (!verif);
                     break;
                 case "cake":
                     do {
-                        verif = buffet.takeProduct(CAKE,quantity)
+                        verif = buffet.takeProduct(Product.CAKE,quantity);
                     }
                     while (!verif);
                     break;
