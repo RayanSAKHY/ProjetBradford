@@ -1,7 +1,7 @@
 package Utils;
 
 public class ExecutionTime {
-    private int speed = 1;
+    private double speed = 1;
     private RandomNumberGen gen;
 
     public ExecutionTime(RandomNumberGen gen, int speed) {
@@ -17,7 +17,7 @@ public class ExecutionTime {
         speed/=2;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
