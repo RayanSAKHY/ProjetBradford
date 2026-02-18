@@ -3,9 +3,9 @@ package assets;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Buffet {
-    private int tea = 0;
-    private int coffee = 0;
-    private int cake = 0;
+    private static int tea = 0;
+    private static int coffee = 0;
+    private static int cake = 0;
     private final ReentrantLock lock = new ReentrantLock();
 
     public Buffet(int tea, int coffee, int cake) {
@@ -29,11 +29,23 @@ public class Buffet {
     public synchronized boolean takeProduct(Product p,int quantity) {
         switch(p) {
             case CAKE:
-                if(cake > quantity) { cake-=quantity; return true; } else return false;
+                if(cake > quantity) {
+                    cake-=quantity;
+                    return true;
+                }
+                else return false;
             case COFFEE:
-                if(coffee > quantity) { coffee-=quantity; return true; } else return false;
+                if(coffee > quantity) {
+                    coffee-=quantity;
+                    return true;
+                }
+                else return false;
             case TEA:
-                if(tea > quantity) { tea-=quantity; return true; } else return false;
+                if(tea > quantity) {
+                    tea-=quantity;
+                    return true;
+                }
+                else return false;
             default:
                 return false;
         }
