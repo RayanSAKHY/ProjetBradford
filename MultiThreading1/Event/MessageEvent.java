@@ -77,7 +77,7 @@ public class MessageEvent implements IEvent {
                     if (it.hasNext()) {
                         sb.append(" and ");
                     }
-                    if (temp.equals("cake")) {
+                    if (temp.contains("cake")) {
                         eat = true;
                     }
                 }
@@ -137,27 +137,12 @@ public class MessageEvent implements IEvent {
                 break;
             case WAIT:
                 sb.append(name).append(" waits in the queue for the ");
-                sb.append(name);
+                sb.append(contents.elementAt(0)).append(".");
                 break;
-            case PIANOQUEUE:
-                sb.append("Queue for the piano: ");
-                int i = 0;
-                while(it.hasNext()) {
-                    String temp = it.next();
-                    sb.append(i).append(": ");
-                    sb.append(temp).append(" ");
-                }
-            case BUFFETQUEUE:
-                sb.append("Queue for the buffet: ");
-                int i = 0;
-                while(it.hasNext()) {
-                    String temp = it.next();
-                    sb.append(i).append(": ");
-                    sb.append(temp).append(" ");
-                }
             default:
                 break;
         }
+        sb.append("\n");
         return sb.toString();
     }
 }
