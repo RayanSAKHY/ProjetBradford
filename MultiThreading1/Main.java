@@ -18,6 +18,8 @@ public class Main {
     private static BlockingQueue<MessageEvent> messageQueue = new LinkedBlockingQueue<>();
     private static volatile boolean running = true; /*i have found information about that
     in this site: https://www.datacamp.com/doc/java/volatile */
+    private static  volatile Map<Int,String> pianoQueue = new Map<>();
+    private static volatile Map<Int,String> buffetQueue = new Map<>();
 
     public static void main(String[] args){
         Main app = new Main();
@@ -66,7 +68,7 @@ public class Main {
                         default:
                             break;
                     }
-                    messageQueue.put(new MessageEvent(Categorie.LOG,"input key : "+e.getInfo()));
+                    //messageQueue.put(new MessageEvent(Categorie.LOG,"input key : "+e.getInfo()));
                 }
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
