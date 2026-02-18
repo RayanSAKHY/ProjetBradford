@@ -49,7 +49,7 @@ public class MessageEvent implements IEvent {
         StringBuilder sb = new StringBuilder();
         Iterator<String> it = contents.iterator();
         switch (categorie) {
-            case Categorie.WANT:
+            case WANT:
                 sb.append(name).append(" ");
                 sb.append("wants ");
                 while (it.hasNext()) {
@@ -64,11 +64,11 @@ public class MessageEvent implements IEvent {
                 }
                 sb.append(".");
                 break;
-            case Categorie.PLAY:
+            case PLAY:
                 sb.append(name).append(" plays the piano for ");
                 sb.append(number).append("ms.");
                 break;
-            case Categorie.TAKE:
+            case TAKE:
                 sb.append(name).append(" takes ");
                 boolean eat = false;
                 while (it.hasNext()) {
@@ -90,17 +90,17 @@ public class MessageEvent implements IEvent {
                 }
                 sb.append(number).append("ms.");
                 break;
-            case Categorie.BUFFET:
+            case BUFFET:
                 sb.append(" Buffet = (");
                 sb.append(buffet.getCake()).append(" cakes, ");
                 sb.append(buffet.getTea()).append(" teas, ");
                 sb.append(buffet.getCoffee()).append(" coffees).");
                 break;
-            case Categorie.LISTEN:
+            case LISTEN:
                 sb.append(name).append(" listens to music for ");
                 sb.append(number).append("ms.");
                 break;
-            case Categorie.END:
+            case END:
                 sb.append(name).append(" finished ");
                 switch (contents.elementAt(0)) {
                     case "piano":
@@ -115,28 +115,31 @@ public class MessageEvent implements IEvent {
                     case "drink":
                         sb.append("drinking.");
                         break;
+                    case "wait":
+                        sb.append("waiting.");
+                        break;
                     default:
                         break;
                 }
                 break;
-            case Categorie.STAFF:
+            case STAFF:
                 sb.append(name).append(" brings ");
                 sb.append(number).append(" ");
                 sb.append(contents.elementAt(0));
                 if (number >1) sb.append("s");
                 sb.append(".");
                 break;
-            case Categorie.KITCHEN:
+            case KITCHEN:
                 sb.append(name).append(" returns to kitchen.");
                 break;
-            case Categorie.LOG:
+            case LOG:
                 sb.append(name);
                 break;
-            case Categorie.WAIT:
+            case WAIT:
                 sb.append(name).append(" waits in the queue for the ");
-                sb.append(contents.elementAt(0));
+                sb.append(name);
                 break;
-            case Categorie.PIANOQUEUE:
+            case PIANOQUEUE:
                 sb.append("Queue for the piano: ");
                 int i = 0;
                 while(it.hasNext()) {
@@ -144,7 +147,7 @@ public class MessageEvent implements IEvent {
                     sb.append(i).append(": ");
                     sb.append(temp).append(" ");
                 }
-            case Categorie.BUFFETQUEUE:
+            case BUFFETQUEUE:
                 sb.append("Queue for the buffet: ");
                 int i = 0;
                 while(it.hasNext()) {
