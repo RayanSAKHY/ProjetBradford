@@ -5,8 +5,6 @@ public enum Categorie {
     PLAY,
     TAKE,
     BUFFET,
-    PIANOQUEUE,
-    BUFFETQUEUE,
     END,
     STAFF,
     LISTEN,
