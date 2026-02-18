@@ -15,4 +15,8 @@ public class RandomNumberGen {
     public int getRandomNumber(int max) {
         return gen.nextInt(max);
     }
+
+    public double getProba() {
+        return gen.nextDouble();
+    }
 }
