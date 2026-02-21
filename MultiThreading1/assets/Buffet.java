@@ -6,7 +6,7 @@ public class Buffet {
     private static int tea = 0;
     private static int coffee = 0;
     private static int cake = 0;
-    private final ReentrantLock lock = new ReentrantLock();
+    private final ReentrantLock lock = new ReentrantLock(true);
 
     public Buffet(int tea, int coffee, int cake) {
         this.tea = tea;

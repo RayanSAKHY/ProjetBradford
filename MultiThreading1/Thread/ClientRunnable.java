@@ -14,7 +14,7 @@ public class ClientRunnable implements Runnable{
     private RandomNumberGen genAlea;
     private BlockingQueue<MessageEvent> messageQueue;
     private static volatile int nbPiano = 2;
-    private final ReentrantLock Lock = new ReentrantLock();
+    private final ReentrantLock Lock = new ReentrantLock(true);
 
     public ClientRunnable(Buffet buffet,Client client, ExecutionTime execTime,RandomNumberGen genAlea,
                           BlockingQueue<MessageEvent> messageQueue) {
