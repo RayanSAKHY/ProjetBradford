@@ -99,8 +99,11 @@ public class Main {
         System.out.println("-b : Show current buffet");
         System.out.println("-q or quit or exit : exit the simulation");
         Scanner sc = new Scanner(System.in);
-        System.out.print("How many clients do you want ? ");
+        System.out.print("How many clients do you want ? (minimum 5 clients) ");
         nbClient = sc.nextInt();
+        if (nbCLient <5) {
+            nbClient = 5;
+        }
         System.out.print("How many staffs do you want ? ");
         nbStaff = sc.nextInt();
         System.out.print("How many tea do you want initially ? ");
