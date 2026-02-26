@@ -10,5 +10,6 @@ public enum Categorie {
     LISTEN,
     WAIT,
     KITCHEN,
-    LOG
+    LOG,
+    WAITBUFFET
 }

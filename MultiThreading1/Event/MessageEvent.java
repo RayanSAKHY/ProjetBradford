@@ -139,6 +139,9 @@ public class MessageEvent implements IEvent {
                 sb.append(name).append(" waits in the queue for the ");
                 sb.append(contents.elementAt(0)).append(".");
                 break;
+            case WAITBUFFET:
+                sb.append(name).append(" waits for the buffet to reffil.");
+                break;
             default:
                 break;
         }
