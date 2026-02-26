@@ -27,7 +27,7 @@ public class StaffRunnable  implements Runnable {
         while (running) {
             try {
                 String threadName = Thread.currentThread().getName();
-                int time = (int) execTime.getExecutionTime();
+                int time = (int) execTime.getExecutionTime() * 1.75;
                 int nbProduct = genAlea.getRandomNumber(5);
                 if (nbProduct == 0) {
                     nbProduct = 1;

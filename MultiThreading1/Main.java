@@ -36,12 +36,14 @@ public class Main {
         app.staffThreadInit(staffThreadList);
         app.clientThreadInit(clientThreadList);
 
-        for(Thread t : staffThreadList) {
-            t.start();
-        }
         for(Thread t : clientThreadList) {
             t.start();
         }
+
+        for(Thread t : staffThreadList) {
+            t.start();
+        }
+
 
         while (running) {
             try {
