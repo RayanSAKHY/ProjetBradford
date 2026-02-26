@@ -51,7 +51,7 @@ public class ClientRunnable implements Runnable{
         double nbAlea = genAlea.getProba();
         int[] quantities = new int[2];
         for (int i = 0; i < 2; i++) {
-            quantities[i]=genAlea.getRandomNumber(5);
+            quantities[i]=genAlea.getRandomNumber(3);
             if (quantities[i] == 0) {
                 quantities[i] = 1;
             }
@@ -59,41 +59,35 @@ public class ClientRunnable implements Runnable{
         String content = consume(nbAlea,quantities);
         messageQueue.put( new MessageEvent(Categorie.WANT,content,name));
 
-        try {
-            boolean hasWaited = false;
-            if (!buffet.tryUse()) {
-                messageQueue.put(new MessageEvent(Categorie.WAIT,"buffet", name));
-                hasWaited = true;
-                while(!buffet.tryUse() && running) {
-                    if (Thread.currentThread().isInterrupted()) {
-                        throw new InterruptedException();
-                    }
-                    Thread.sleep(1);
+        boolean hasWaited = false;
+        if (!buffet.tryUse()) {
+            messageQueue.put(new MessageEvent(Categorie.WAIT,"buffet", name));
+            hasWaited = true;
+            while(!buffet.tryUse() && running) {
+                if (Thread.currentThread().isInterrupted()) {
+                    throw new InterruptedException();
                 }
-            }
-            else {
-                if (hasWaited) {
-                    messageQueue.put(new MessageEvent(Categorie.END, name));
-                    hasWaited = false;
-                }
-                try {
-                    int time = (int)execTime.getExecutionTime();
-                    takeFromBuffet(content,buffet,name);
-                    messageQueue.put( new MessageEvent(Categorie.TAKE,content,name, time));
-                    Thread.sleep(time);
-                    String id = "drink";
-                    if (content.contains("cake")) {
-                        id = "eat";
-                    }
-                    messageQueue.put(new MessageEvent(Categorie.END,id,name));
-                } finally {
-                    buffet.release();
-                }
+                Thread.sleep(1);
             }
         }
-        catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            running = false;
+        else {
+            if (hasWaited) {
+                messageQueue.put(new MessageEvent(Categorie.END, name));
+                hasWaited = false;
+            }
+            try {
+                int time = (int)execTime.getExecutionTime();
+                takeFromBuffet(content,buffet,name);
+                messageQueue.put( new MessageEvent(Categorie.TAKE,content,name, time));
+                Thread.sleep(time);
+                String id = "drink";
+                if (content.contains("cake")) {
+                    id = "eat";
+                }
+                messageQueue.put(new MessageEvent(Categorie.END,id,name));
+            } finally {
+                buffet.release();
+            }
         }
     }
 
@@ -102,50 +96,44 @@ public class ClientRunnable implements Runnable{
 
         String content = entertain(nbAlea);
         int time = (int)execTime.getExecutionTime();
-        try {
-            switch(content) {
-                case "piano":
-                    messageQueue.put( new MessageEvent(Categorie.WANT,content,name));
-                    boolean hasWaited = false;
-                    if (!Lock.tryLock() || nbPiano <= 0) {
-                        messageQueue.put(new MessageEvent(Categorie.WAIT, "piano", name));
-                        hasWaited = true;
-                        while(!Lock.tryLock() && running) {
-                            if (Thread.currentThread().isInterrupted()) {
-                                throw new InterruptedException();
-                            }
-                            Thread.sleep(1);
+        switch(content) {
+            case "piano":
+                messageQueue.put( new MessageEvent(Categorie.WANT,content,name));
+                boolean hasWaited = false;
+                if (!Lock.tryLock() || nbPiano <= 0) {
+                    messageQueue.put(new MessageEvent(Categorie.WAIT, "piano", name));
+                    hasWaited = true;
+                    while(!Lock.tryLock() && running) {
+                        if (Thread.currentThread().isInterrupted()) {
+                            throw new InterruptedException();
                         }
+                        Thread.sleep(1);
                     }
-                    else {
-                        if (hasWaited) {
-                            messageQueue.put(new MessageEvent(Categorie.END,"wait",name));
-                            hasWaited = false;
-                        }
-                        try {
-                            nbPiano--;
-                            messageQueue.put( new MessageEvent(Categorie.PLAY,name,time));
-                            Thread.sleep(time);
-                            messageQueue.put(new MessageEvent(Categorie.END,content,name));
-                        } finally {
-                            nbPiano++;
-                            Lock.unlock();
-                        }
+                }
+                else {
+                    if (hasWaited) {
+                        messageQueue.put(new MessageEvent(Categorie.END,"wait",name));
+                        hasWaited = false;
                     }
+                    try {
+                        nbPiano--;
+                        messageQueue.put( new MessageEvent(Categorie.PLAY,name,time));
+                        Thread.sleep(time);
+                        messageQueue.put(new MessageEvent(Categorie.END,content,name));
+                    } finally {
+                        nbPiano++;
+                        Lock.unlock();
+                    }
+                }
 
-                    break;
-                case "music":
-                    messageQueue.put( new MessageEvent(Categorie.LISTEN,name,
-                            time));
-                    Thread.sleep(time);
-                    break;
-                default:
-                    break;
-            }
-        }
-        catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            running = false;
+                break;
+            case "music":
+                messageQueue.put( new MessageEvent(Categorie.LISTEN,name,
+                        time));
+                Thread.sleep(time);
+                break;
+            default:
+                break;
         }
 
     }
