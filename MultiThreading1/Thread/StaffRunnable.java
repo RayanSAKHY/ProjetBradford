@@ -28,22 +28,15 @@ public class StaffRunnable  implements Runnable {
             try {
                 String threadName = Thread.currentThread().getName();
                 int time = (int) execTime.getExecutionTime();
-                time *=2;
-                int nbProduct = genAlea.getRandomNumber(5);
+
+                int nbProduct = genAlea.getRandomNumber(3);
                 if (nbProduct == 0) {
                     nbProduct = 1;
                 }
                 Thread.sleep(time);
-                if (!buffet.tryUse()) {
-                    while (!buffet.tryUse() && running) {
-                        if (Thread.currentThread().isInterrupted()) {
-                            throw new InterruptedException();
-                        }
-                    }
-                }
-                else {
+
+                synchronized(buffet) {
                     staff.addToBuffet(buffet,nbProduct);
-                    buffet.release();
                 }
                 queue.put(new MessageEvent(Categorie.STAFF,staff.toString(),
                         threadName,nbProduct) );
