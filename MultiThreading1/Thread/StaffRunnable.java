@@ -34,8 +34,16 @@ public class StaffRunnable  implements Runnable {
                     nbProduct = 1;
                 }
                 Thread.sleep(time);
-                synchronized(buffet) {
+                if (!buffet.tryUse()) {
+                    while (!buffet.tryUse() && running) {
+                        if (Thread.currentThread().isInterrupted()) {
+                            throw new InterruptedException();
+                        }
+                    }
+                }
+                else {
                     staff.addToBuffet(buffet,nbProduct);
+                    buffet.release();
                 }
                 queue.put(new MessageEvent(Categorie.STAFF,staff.toString(),
                         threadName,nbProduct) );
