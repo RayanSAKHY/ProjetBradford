@@ -47,14 +47,24 @@ public class Main {
             try {
                 IEvent e = commandQueue.take();
                 if (e instanceof QuitEvent) {
-                    running = false;
                     outputThread.interrupt();
                     for(Thread t : staffThreadList) {
                         t.interrupt();
+                        if (t.getState() == Thread.State.TERMINATED) {
+                            //System.out.println("fin des staff thread");
+                        }
                     }
                     for(Thread t : clientThreadList) {
                         t.interrupt();
+                        if (t.getState() == Thread.State.TERMINATED) {
+                            //System.out.println("fin des client thread");
+                        }
                     }
+                    inputThread.interrupt();
+                    if (inputThread.isAlive()) //System.out.println("fin des input thread");
+
+                    //System.out.println("fin des thread");
+                    running = false;
                 }
                 else if (e instanceof InputEvent){
                     switch(e.getInfo()) {
@@ -101,7 +111,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         System.out.print("How many clients do you want ? (minimum 5 clients) ");
         nbClient = sc.nextInt();
-        if (nbCLient <5) {
+        if (nbClient <5) {
             nbClient = 5;
         }
         System.out.print("How many staffs do you want ? ");
@@ -147,7 +157,7 @@ public class Main {
         list.add(new Thread(new ClientRunnable(buffet,
                 client,execTime, gen,
                 messageQueue),name));
-        return capa;
+        return capa+1;
     }
 
     public void test(){
