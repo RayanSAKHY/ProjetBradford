@@ -50,18 +50,17 @@ public class Main {
                     outputThread.interrupt();
                     for(Thread t : staffThreadList) {
                         t.interrupt();
-                        if (t.getState() == Thread.State.TERMINATED) {
-                            //System.out.println("fin des staff thread");
-                        }
+                        t.join();
+                        //System.out.println("fin du thread staff");
                     }
                     for(Thread t : clientThreadList) {
                         t.interrupt();
-                        if (t.getState() == Thread.State.TERMINATED) {
-                            //System.out.println("fin des client thread");
-                        }
+                        t.join();
+                        //System.out.println("fin des client thread");
                     }
                     inputThread.interrupt();
-                    if (inputThread.isAlive()) //System.out.println("fin des input thread");
+                    inputThread.join();
+                    //if (inputThread.isAlive()) System.out.println("fin des input thread");
 
                     //System.out.println("fin des thread");
                     running = false;
