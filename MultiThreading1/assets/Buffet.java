@@ -29,19 +29,19 @@ public class Buffet {
     public synchronized boolean takeProduct(Product p,int quantity) {
         switch(p) {
             case CAKE:
-                if(cake > quantity) {
+                if(cake >= quantity) {
                     cake-=quantity;
                     return true;
                 }
                 else return false;
             case COFFEE:
-                if(coffee > quantity) {
+                if(coffee >= quantity) {
                     coffee-=quantity;
                     return true;
                 }
                 else return false;
             case TEA:
-                if(tea > quantity) {
+                if(tea >= quantity) {
                     tea-=quantity;
                     return true;
                 }
