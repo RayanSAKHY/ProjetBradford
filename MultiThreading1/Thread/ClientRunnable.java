@@ -63,15 +63,22 @@ public class ClientRunnable implements Runnable{
             boolean hasWaited = false;
             if (!buffet.tryUse()) {
                 messageQueue.put(new MessageEvent(Categorie.WAIT,"buffet", name));
+                hasWaited = true;
+                while(!buffet.tryUse() && running) {
+                    if (Thread.currentThread().isInterrupted()) {
+                        throw new InterruptedException();
+                    }
+                    Thread.sleep(1);
+                }
             }
             else {
                 if (hasWaited) {
-                    messageQueue.put(new MessageEvent(Categorie.WAIT, "buffet", name));
+                    messageQueue.put(new MessageEvent(Categorie.END, name));
                     hasWaited = false;
                 }
                 try {
                     int time = (int)execTime.getExecutionTime();
-                    takeFromBuffet(content,buffet);
+                    takeFromBuffet(content,buffet,name);
                     messageQueue.put( new MessageEvent(Categorie.TAKE,content,name, time));
                     Thread.sleep(time);
                     String id = "drink";
@@ -102,7 +109,13 @@ public class ClientRunnable implements Runnable{
                     boolean hasWaited = false;
                     if (!Lock.tryLock() || nbPiano <= 0) {
                         messageQueue.put(new MessageEvent(Categorie.WAIT, "piano", name));
-                        hasWaited = false;
+                        hasWaited = true;
+                        while(!Lock.tryLock() && running) {
+                            if (Thread.currentThread().isInterrupted()) {
+                                throw new InterruptedException();
+                            }
+                            Thread.sleep(1);
+                        }
                     }
                     else {
                         if (hasWaited) {
@@ -173,35 +186,41 @@ public class ClientRunnable implements Runnable{
         return output;
     }
 
-    private void takeFromBuffet(String content,Buffet buffet) {
+    private void takeFromBuffet(String content,Buffet buffet,String name) throws InterruptedException{
         String[] mots = content.split(",");
         for (String mot:mots){
             boolean verif;
             String product = mot.split(" ")[1];
             int quantity = Integer.parseInt(mot.split(" ")[0]);
 
-            switch (product){
-                case "coffee":
-                    do {
-                        verif = buffet.takeProduct(Product.COFFEE,quantity);
-                    }
-                    while (!verif);
-                    break;
-                case "tea":
-                    do {
-                        verif = buffet.takeProduct(Product.TEA,quantity);
-                    }
-                    while (!verif);
-                    break;
-                case "cake":
-                    do {
-                        verif = buffet.takeProduct(Product.CAKE,quantity);
-                    }
-                    while (!verif);
-                    break;
-                default:
-                    break;
-            }
+                switch (product) {
+                    case "coffee":
+                        verif = buffet.takeProduct(Product.COFFEE, quantity);
+                        if (!verif) messageQueue.put(new MessageEvent(Categorie.WAITBUFFET,name));
+                        while (!verif && running && !Thread.currentThread().isInterrupted()) {
+                            verif = buffet.takeProduct(Product.COFFEE, quantity);
+                            Thread.sleep(1);
+                        }
+                        break;
+                    case "tea":
+                        verif = buffet.takeProduct(Product.TEA, quantity);
+                        if (!verif) messageQueue.put(new MessageEvent(Categorie.WAITBUFFET,name));
+                        while (!verif && running && !Thread.currentThread().isInterrupted()) {
+                            verif = buffet.takeProduct(Product.TEA, quantity);
+                            Thread.sleep(1);
+                        }
+                        break;
+                    case "cake":
+                        verif = buffet.takeProduct(Product.CAKE, quantity);
+                        if (!verif) messageQueue.put(new MessageEvent(Categorie.WAITBUFFET,name));
+                        while (!verif && running && !Thread.currentThread().isInterrupted()) {
+                            verif = buffet.takeProduct(Product.CAKE, quantity);
+                            Thread.sleep(1);
+                        }
+                        break;
+                    default:
+                        break;
+                }
         }
     }
 }
