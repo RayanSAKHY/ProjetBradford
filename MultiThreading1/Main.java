@@ -154,7 +154,7 @@ public class Main {
         int capa = list.size();
         Client client = new Client();
         String name = "Client-"+capa;
-
+        nbClient++;
         list.add(new Thread(new ClientRunnable(buffet,
                 client,execTime, gen,
                 messageQueue),name));
