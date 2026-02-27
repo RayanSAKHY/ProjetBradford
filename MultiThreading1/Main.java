@@ -50,6 +50,7 @@ public class Main {
                 IEvent e = commandQueue.take();
                 if (e instanceof QuitEvent) {
                     outputThread.interrupt();
+                    outputThread.join();
                     for(Thread t : staffThreadList) {
                         t.interrupt();
                         t.join();
