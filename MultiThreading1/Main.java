@@ -159,7 +159,7 @@ public class Main {
         list.add(new Thread(new ClientRunnable(buffet,
                 client,execTime, gen,
                 messageQueue),name));
-        return capa+1;
+        return capa;
     }
 
     public void test(){
