@@ -75,8 +75,9 @@ public class ClientRunnable implements Runnable{
                 messageQueue.put(new MessageEvent(Categorie.END, name));
                 hasWaited = false;
             }
+            int time = (int)execTime.getExecutionTime();
             try {
-                int time = (int)execTime.getExecutionTime();
+
                 takeFromBuffet(content,buffet,name);
                 messageQueue.put( new MessageEvent(Categorie.TAKE,content,name, time));
             } finally {
