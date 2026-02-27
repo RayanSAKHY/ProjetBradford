@@ -79,15 +79,15 @@ public class ClientRunnable implements Runnable{
                 int time = (int)execTime.getExecutionTime();
                 takeFromBuffet(content,buffet,name);
                 messageQueue.put( new MessageEvent(Categorie.TAKE,content,name, time));
-                Thread.sleep(time);
-                String id = "drink";
-                if (content.contains("cake")) {
-                    id = "eat";
-                }
-                messageQueue.put(new MessageEvent(Categorie.END,id,name));
             } finally {
                 buffet.release();
             }
+            Thread.sleep(time);
+            String id = "drink";
+            if (content.contains("cake")) {
+                id = "eat";
+            }
+            messageQueue.put(new MessageEvent(Categorie.END,id,name));
         }
     }
 
