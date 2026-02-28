@@ -1,24 +1,14 @@
 package Bradford.CWW;
 
-import jakarta.persistence.*;
+public class User{
+    private Long id;
 
-@Entity
-@Table
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column
     private String username;
 
-    @Column
     private String hashedPassword;
 
-    @Column
     private String email;
 
-    @Column
     private String phoneNumber;
 
     public String getPhoneNumber() {
@@ -53,12 +43,16 @@ public class User {
         this.username = username;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public User() {
+        this("","","","");
     }
 
     public User(String username, String hashedPassword, String email, String phoneNumber) {
