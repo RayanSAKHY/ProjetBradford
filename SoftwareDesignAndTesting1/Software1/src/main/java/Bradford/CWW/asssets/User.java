@@ -1,4 +1,4 @@
-package Bradford.CWW;
+package Bradford.CWW.asssets;
 
 public class User{
     private Long id;
