@@ -25,8 +25,8 @@ public class Main {
         app.Init();
         //app.test();
 
-        Thread inputThread = new Thread(new InputRunnable(commandQueue,running));
-        Thread outputThread = new Thread(new WriterRunnable(messageQueue,buffet));
+        Thread inputThread = new Thread(new InputRunnable(commandQueue,running,System.in));
+        Thread outputThread = new Thread(new WriterRunnable(messageQueue,buffet,System.out));
         Vector<Thread> staffThreadList = new Vector<>();
         Vector<Thread> clientThreadList = new Vector<>();
         outputThread.start();
