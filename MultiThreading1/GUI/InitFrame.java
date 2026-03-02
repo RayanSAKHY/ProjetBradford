@@ -3,14 +3,15 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import assets.*;
 
 public class InitFrame extends JFrame {
 
-    private JTextField nbClient;
-    private JTextField nbStaff;
-    private JTextField nbTea;
-    private JTextField nbCake;
-    private JTextField nbCoffee;
+    private JTextField nbClientField;
+    private JTextField nbStaffField;
+    private JTextField nbTeaField;
+    private JTextField nbCakeField;
+    private JTextField nbCoffeeField;
     private JButton startButton;
 
     public InitFrame() {
@@ -22,25 +23,25 @@ public class InitFrame extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(6,2));
 
-        panel.add(new JLabel("Number of clients :"));
-        nbClient = new JTextField();
-        panel.add(nbClient);
+        panel.add(new JLabel("Number of clients (minimum 5):"));
+        nbClientField = new JTextField("5");
+        panel.add(nbClientField);
 
-        panel.add(new JLabel("Number of staffs :"));
-        nbStaff = new JTextField();
-        panel.add(nbStaff);
+        panel.add(new JLabel("Number of staffs (minimum 3):"));
+        nbStaffField = new JTextField("3");
+        panel.add(nbStaffField);
 
         panel.add(new JLabel("Number of teas :"));
-        nbTea = new JTextField();
-        panel.add(nbTea);
+        nbTeaField = new JTextField("2");
+        panel.add(nbTeaField);
 
         panel.add(new JLabel("Number of cake :"));
-        nbCake = new JTextField();
-        panel.add(nbCake);
+        nbCakeField = new JTextField("2");
+        panel.add(nbCakeField);
 
         panel.add(new JLabel("Number of coffee :"));
-        nbCoffee = new JTextField();
-        panel.add(nbCoffee);
+        nbCoffeeField = new JTextField("2");
+        panel.add(nbCoffeeField);
 
         startButton = new JButton("Démarrer");
         panel.add(startButton);
@@ -49,12 +50,15 @@ public class InitFrame extends JFrame {
         add(panel);
 
         startButton.addActionListener((ActionEvent e) -> {
-            int nbClients = Integer.parseInt(nbClientsField.getText());
+            int nbClients = Integer.parseInt(nbClientField.getText());
             int nbStaff = Integer.parseInt(nbStaffField.getText());
+            int nbTea = Integer.parseInt(nbTeaField.getText());
+            int nbCake = Integer.parseInt(nbCakeField.getText());
+            int nbCoffee = Integer.parseInt(nbCoffeeField.getText());
 
             this.dispose();
 
-            SwingUtilities.invokeLater(() -> new MainFrame(nbClients, nbStaff).setVisible(true));
+            SwingUtilities.invokeLater(() -> new MainFrame(nbClients, nbStaff,new Buffet(nbTea,nbCoffee,nbCake)).setVisible(true));
         });
     }
 }
