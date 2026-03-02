@@ -1,5 +1,7 @@
 package IO;
 
+import javax.swing.*;
+
 public class GUIOutputDest implements OutputDest{
     private JTextArea output;
 
