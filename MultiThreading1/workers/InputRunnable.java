@@ -1,4 +1,4 @@
-package Thread;
+package workers;
 
 import Event.*;
 import java.util.concurrent.BlockingQueue;

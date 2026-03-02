@@ -1,4 +1,4 @@
-package Thread;
+package workers;
 
 import assets.*;
 import Utils.*;
