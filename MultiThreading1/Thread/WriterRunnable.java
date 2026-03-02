@@ -2,18 +2,16 @@ package Thread;
 
 import Event.*;
 import java.util.concurrent.BlockingQueue;
-import assets.Buffet;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import IO.*;
 
 public class WriterRunnable implements Runnable {
     private BlockingQueue<MessageEvent> queue;
     private volatile boolean running = true;
-    private PrintWriter output;
+    private OutputDest output;
 
-    public WriterRunnable(BlockingQueue<MessageEvent> queue,OutputStream output) {
+    public WriterRunnable(BlockingQueue<MessageEvent> queue,OutputDest output) {
         this.queue = queue;
-        this.output = new PrintWriter(output,true);
+        this.output = output;
     }
 
     @Override

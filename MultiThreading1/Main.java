@@ -21,7 +21,7 @@ public class Main {
     private static volatile boolean running = true; /*i have found information about that
     in this site: https://www.datacamp.com/doc/java/volatile */
     private static InputSource inputSource = new ConsoleInputSource();
-    //private OutputDest outputDest = new ConsoleOutputDest();
+    private static OutputDest outputDest = new ConsoleOutputDest();
 
     public static void main(String[] args){
         Main app = new Main();
@@ -29,7 +29,7 @@ public class Main {
         //app.test();
 
         Thread inputThread = new Thread(new InputRunnable(commandQueue,inputSource));
-        Thread outputThread = new Thread(new WriterRunnable(messageQueue,System.out));
+        Thread outputThread = new Thread(new WriterRunnable(messageQueue,outputDest));
         Vector<Thread> staffThreadList = new Vector<>();
         Vector<Thread> clientThreadList = new Vector<>();
         outputThread.start();
