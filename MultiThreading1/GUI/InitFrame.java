@@ -54,17 +54,24 @@ public class InitFrame extends JFrame {
 
         startButton.addActionListener((ActionEvent e) -> {
             int nbClients = Integer.parseInt(nbClientField.getText());
+            if (nbClients < 5) {
+                nbClients = 5;
+            }
             int nbStaff = Integer.parseInt(nbStaffField.getText());
+            if (nbStaff < 3) {
+                nbStaff = 3;
+            }
             int nbTea = Integer.parseInt(nbTeaField.getText());
             int nbCake = Integer.parseInt(nbCakeField.getText());
             int nbCoffee = Integer.parseInt(nbCoffeeField.getText());
 
             this.dispose();
 
-            SwingUtilities.invokeLater(() -> {
-                Buffet buffet = new Buffet(nbTea, nbCoffee, nbCake);
-                MainFrame mainFrame = new MainFrame(nbClients, nbStaff, buffet);
-            });
+            Buffet buffet = new Buffet(nbTea, nbCoffee, nbCake);
+            MainFrame mainFrame = new MainFrame(nbClients, nbStaff, buffet);
+            mainFrame.setVisible(true);
+
+            mainFrame.run();
         });
     }
 }
