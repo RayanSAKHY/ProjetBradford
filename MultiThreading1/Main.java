@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import Event.*;
-import Thread.*;
+import workers.*;
 import java.util.Vector;
 import java.util.Map;
 import IO.*;
@@ -121,6 +121,9 @@ public class Main {
         }
         System.out.print("How many staffs do you want ? (minimum 3) ");
         nbStaff = sc.nextInt();
+        if (nbStaff < 3) {
+            nbStaff = 3;
+        }
         System.out.print("How many tea do you want initially ? ");
         int nbTea = sc.nextInt();
         System.out.print("How many cakes do you want initially ? ");
