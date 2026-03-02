@@ -119,7 +119,7 @@ public class Main {
         if (nbClient <5) {
             nbClient = 5;
         }
-        System.out.print("How many staffs do you want ? ");
+        System.out.print("How many staffs do you want ? (minimum 3) ");
         nbStaff = sc.nextInt();
         System.out.print("How many tea do you want initially ? ");
         int nbTea = sc.nextInt();
