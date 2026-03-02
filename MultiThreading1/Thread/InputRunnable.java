@@ -7,28 +7,35 @@ import java.io.InputStream;
 
 public class InputRunnable implements Runnable {
     private BlockingQueue<IEvent> queue;
-    private volatile boolean running;
+    private volatile boolean running = true;
     private InputStream in;
 
-    public InputRunnable(BlockingQueue<IEvent> queue,boolean running,InputStream in) {
+    public InputRunnable(BlockingQueue<IEvent> queue,InputStream in) {
         this.queue = queue;
-        this.running = running;
         this.in = in;
     }
 
     @Override
     public void run() {
         Scanner scanner = new Scanner(in);
-        while (running) {
-            String line = scanner.nextLine();
-            if (line.equalsIgnoreCase("q") || line.equalsIgnoreCase("exit") || line.equalsIgnoreCase("quit")) {
-                running = false;
-                queue.offer(new QuitEvent());
-            } else {
-                queue.offer(new InputEvent(line));
+        try{
+            while (running) {
+                String line = scanner.nextLine();
+                if (line.equalsIgnoreCase("q") || line.equalsIgnoreCase("exit") || line.equalsIgnoreCase("quit")) {
+                    running = false;
+                    queue.put(new QuitEvent());
+                } else {
+                    queue.put(new InputEvent(line));
+                }
             }
         }
-        scanner.close();
+        catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            running = false;
+        }
+        finally {
+            scanner.close();
+        }
     }
 
 }
