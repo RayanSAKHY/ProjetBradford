@@ -7,6 +7,7 @@ import Event.*;
 import Thread.*;
 import java.util.Vector;
 import java.util.Map;
+import IO.*;
 
 public class Main {
     private int nbClient;
@@ -19,13 +20,15 @@ public class Main {
     private static BlockingQueue<MessageEvent> messageQueue = new LinkedBlockingQueue<>();
     private static volatile boolean running = true; /*i have found information about that
     in this site: https://www.datacamp.com/doc/java/volatile */
+    private static InputSource inputSource = new ConsoleInputSource();
+    //private OutputDest outputDest = new ConsoleOutputDest();
 
     public static void main(String[] args){
         Main app = new Main();
         app.Init();
         //app.test();
 
-        Thread inputThread = new Thread(new InputRunnable(commandQueue,System.in));
+        Thread inputThread = new Thread(new InputRunnable(commandQueue,inputSource));
         Thread outputThread = new Thread(new WriterRunnable(messageQueue,System.out));
         Vector<Thread> staffThreadList = new Vector<>();
         Vector<Thread> clientThreadList = new Vector<>();
