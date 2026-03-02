@@ -26,7 +26,7 @@ public class Main {
         //app.test();
 
         Thread inputThread = new Thread(new InputRunnable(commandQueue,System.in));
-        Thread outputThread = new Thread(new WriterRunnable(messageQueue,buffet,System.out));
+        Thread outputThread = new Thread(new WriterRunnable(messageQueue,System.out));
         Vector<Thread> staffThreadList = new Vector<>();
         Vector<Thread> clientThreadList = new Vector<>();
         outputThread.start();

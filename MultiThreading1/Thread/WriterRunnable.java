@@ -9,12 +9,10 @@ import java.io.PrintWriter;
 public class WriterRunnable implements Runnable {
     private BlockingQueue<MessageEvent> queue;
     private volatile boolean running = true;
-    private Buffet buffet;
     private PrintWriter output;
 
-    public WriterRunnable(BlockingQueue<MessageEvent> queue,Buffet buffet,OutputStream output) {
+    public WriterRunnable(BlockingQueue<MessageEvent> queue,OutputStream output) {
         this.queue = queue;
-        this.buffet = buffet;
         this.output = new PrintWriter(output,true);
     }
 
