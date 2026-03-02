@@ -49,6 +49,9 @@ public class InitFrame extends JFrame {
 
         add(panel);
 
+        pack();
+        setLocationRelativeTo(null);
+
         startButton.addActionListener((ActionEvent e) -> {
             int nbClients = Integer.parseInt(nbClientField.getText());
             int nbStaff = Integer.parseInt(nbStaffField.getText());
@@ -58,7 +61,10 @@ public class InitFrame extends JFrame {
 
             this.dispose();
 
-            SwingUtilities.invokeLater(() -> new MainFrame(nbClients, nbStaff,new Buffet(nbTea,nbCoffee,nbCake)).setVisible(true));
+            SwingUtilities.invokeLater(() -> {
+                Buffet buffet = new Buffet(nbTea, nbCoffee, nbCake);
+                MainFrame mainFrame = new MainFrame(nbClients, nbStaff, buffet);
+            });
         });
     }
 }
