@@ -5,34 +5,14 @@ public class User{
 
     private String username;
 
-    private String hashedPassword;
-
-    private String email;
-
-    private String phoneNumber;
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    private String password;
 
     public String getPassword() {
-        return hashedPassword;
+        return password;
     }
 
     public void setHashedPassword(String password) {
-        this.hashedPassword = password;
+        this.password = password;
     }
 
     public String getUsername() {
@@ -52,13 +32,11 @@ public class User{
     }
 
     public User() {
-        this("","","","");
+        this("","");
     }
 
-    public User(String username, String hashedPassword, String email, String phoneNumber) {
+    public User(String username, String hashedPassword) {
         this.username = username;
-        this.hashedPassword = hashedPassword;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
+        this.password = hashedPassword;
     }
 }
