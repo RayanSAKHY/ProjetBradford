@@ -3,7 +3,7 @@ package Bradford.CWW.MFA;
 import Bradford.CWW.asssets.User;
 import java.util.Scanner;
 
-public class TextMessage implements Code {
+public class CodeSentBySMS implements IMFAStrategy {
     @Override
     public boolean TwoStepVerif(User user) {
         Scanner sc = new Scanner(System.in);
