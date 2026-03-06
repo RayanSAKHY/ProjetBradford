@@ -37,10 +37,10 @@ public class Login {
                                 strategy = new AppNotification();
                                 break;
                             case 3:
-                                strategy = new Email();
+                                strategy = new CodeSentByEmail();
                                 break;
                             case 4:
-                                strategy = new TextMessage();
+                                strategy = new CodeSentBySMS();
                                 break;
                             case 5:
                                 strategy = new AuthentificatorApp();
@@ -55,6 +55,10 @@ public class Login {
 
                         mfalogin = new MFALogin(strategy);
                         connected =  mfalogin.twoStepVerif(user);
+                        if (!connected) {
+                            System.out.println("Two Step Verification failed ");
+                            nbEssai++;
+                        }
                     }
                     catch (NumberFormatException ex) {
                         nbEssai++;
