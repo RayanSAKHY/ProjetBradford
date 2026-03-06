@@ -34,15 +34,12 @@ public class Login {
                                 strategy = new PhoneCall();
                                 break;
                             case 2:
-                                strategy = new AppNotification();
-                                break;
-                            case 3:
                                 strategy = new CodeSentByEmail();
                                 break;
-                            case 4:
+                            case 3:
                                 strategy = new CodeSentBySMS();
                                 break;
-                            case 5:
+                            case 4:
                                 strategy = new AuthentificatorApp();
                                 break;
                             default:
@@ -95,10 +92,9 @@ public class Login {
     private String MFAChoice() {
         System.out.println("Which method do you prefer to verify that it's you : ");
         System.out.println("- Receiving a phone call (type 1)" );
-        System.out.println("- Obtain a notification on an app (type 2)" );
-        System.out.println("- Send a code by email (type 3)" );
-        System.out.println("- Send a code by text message (type 4)" );
-        System.out.println("- Check your authenticator app (type 5)" );
+        System.out.println("- Send a code by email (type 2)" );
+        System.out.println("- Send a code by text message (type 3)" );
+        System.out.println("- Check your authenticator app (type 4)" );
         Scanner sc = new Scanner(System.in);
 
         return sc.nextLine();
