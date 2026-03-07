@@ -1,7 +1,6 @@
 package Bradford.CWW.asssets;
 
 public class User{
-    private Long id;
 
     private String username;
 
@@ -21,14 +20,6 @@ public class User{
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public User() {
