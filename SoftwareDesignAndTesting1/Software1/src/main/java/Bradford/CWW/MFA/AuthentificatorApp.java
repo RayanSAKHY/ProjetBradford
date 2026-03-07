@@ -24,30 +24,31 @@ public class AuthentificatorApp implements IMFAStrategy {
     private InputStream in;
     private Scanner scanner;
     private QrGenerator qrGenerator;
+    private SecretGenerator secretGenerator;
 
     public AuthentificatorApp() {
-        this(new SystemTimeProvider(), new DefaultCodeGenerator(),System.in,new ZxingPngQrGenerator());
+        this(new SystemTimeProvider(), new DefaultCodeGenerator(),System.in,new ZxingPngQrGenerator(),new DefaultSecretGenerator());
     }
 
-    public AuthentificatorApp(TimeProvider timeProvider,CodeGenerator codeGenerator,InputStream in, QrGenerator qrGenerator) {
+    public AuthentificatorApp(TimeProvider timeProvider,CodeGenerator codeGenerator,InputStream in, QrGenerator qrGenerator,SecretGenerator secretGenerator) {
         this.timeProvider = timeProvider;
         this.codeGenerator = codeGenerator;
         this.in = in;
         this.qrGenerator = qrGenerator;
+        this.secretGenerator = secretGenerator;
         scanner = new Scanner(in);
     }
 
     public AuthentificatorApp(TimeProvider timeProvider,CodeGenerator codeGenerator,InputStream in) {
-        this(timeProvider,codeGenerator,in,new ZxingPngQrGenerator());
+        this(timeProvider,codeGenerator,in,new ZxingPngQrGenerator(),new DefaultSecretGenerator());
     }
 
     public AuthentificatorApp(TimeProvider timeProvider, CodeGenerator codeGenerator) {
-        this(timeProvider,codeGenerator,System.in,new ZxingPngQrGenerator());
+        this(timeProvider,codeGenerator,System.in,new ZxingPngQrGenerator(),new DefaultSecretGenerator());
     }
 
     @Override
     public boolean TwoStepVerif(User user) {
-        SecretGenerator secretGenerator = new DefaultSecretGenerator();
         String secret = secretGenerator.generate();
         // secret = "BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV"
         try {
