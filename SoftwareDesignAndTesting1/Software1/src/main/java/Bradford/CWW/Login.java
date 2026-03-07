@@ -11,10 +11,12 @@ import java.util.Scanner;
 public class Login {
     private MFALogin mfalogin;
     private Map<String, User> users = new HashMap<>();
+    private Scanner scanner;
 
     public Login() {
         users.put("",new User());
         users.put("test",new User("test","azerty"));
+        scanner = new Scanner(System.in);
     }
 
     public boolean login(String username, String password) {
@@ -22,13 +24,13 @@ public class Login {
         boolean connected = false;
         int nbEssai = 0;
         while (nbEssai < 3 && !connected) {
-            credentialsPrint(username, password);
+            System.out.println(credentialsPrint(username, password));
             if (users.containsKey(username)){
                 User user = users.get(username);
                 if (user.getPassword().equals(password)) {
                     String input = MFAChoice();
                     try {
-                        int choice = StringToInt(input);
+                        int choice = Integer.parseInt(input);
                         switch (choice) {
                             case 1:
                                 strategy = new PhoneCall();
@@ -95,19 +97,18 @@ public class Login {
         System.out.println("- Send a code by email (type 2)" );
         System.out.println("- Send a code by text message (type 3)" );
         System.out.println("- Check your authenticator app (type 4)" );
-        Scanner sc = new Scanner(System.in);
 
-        return sc.nextLine();
+        return scanner.nextLine();
     }
 
-    private int StringToInt(String input) throws NumberFormatException {
-        return Integer.parseInt(input);
-    }
-
-    private void credentialsPrint(String username, String password) {
-        System.out.println("Username: "+username);
+    public String credentialsPrint(String username, String password) {
+        StringBuilder output = new StringBuilder();
+        output.append("Username: ").append(username);
+        output.append("\n");
         StringBuilder hiddenPassword= new StringBuilder();
         hiddenPassword.append("*".repeat(password.length()));
-        System.out.println("Password: "+hiddenPassword);
+        output.append("Password: ").append(hiddenPassword);
+        output.append("\n");
+        return output.toString();
     }
 }
