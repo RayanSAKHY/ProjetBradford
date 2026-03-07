@@ -18,11 +18,20 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class AuthentificatorApp implements IMFAStrategy {
+    private TimeProvider timeProvider;
+    private CodeGenerator codeGenerator;
+
+    public AuthentificatorApp() {
+        this(new SystemTimeProvider(), new DefaultCodeGenerator());
+    }
+    public AuthentificatorApp(TimeProvider timeProvider, CodeGenerator codeGenerator) {
+        this.timeProvider = timeProvider;
+        this.codeGenerator = codeGenerator;
+    }
 
     @Override
     public boolean TwoStepVerif(User user) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Code generating ");
         SecretGenerator secretGenerator = new DefaultSecretGenerator();
         String secret = secretGenerator.generate();
         // secret = "BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV"
@@ -69,13 +78,15 @@ public class AuthentificatorApp implements IMFAStrategy {
         }
     }
 
-    private boolean verifyCode(String secret, String code) {
-        TimeProvider timeProvider = new SystemTimeProvider();
-        CodeGenerator codeGenerator = new DefaultCodeGenerator();
-        CodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
+    public boolean verifyCode(String secret, String code) {
+        DefaultCodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
+
+        verifier.setAllowedTimePeriodDiscrepancy(1);
 
         // secret = the shared secret for the user
         // code = the code submitted by the user
+        code = code.trim(); //pour retirer les espaces
         return verifier.isValidCode(secret, code);
     }
 }
+
