@@ -4,6 +4,9 @@ import Bradford.CWW.MFA.AuthentificatorApp;
 import Bradford.CWW.asssets.User;
 import dev.samstevens.totp.code.CodeGenerator;
 import dev.samstevens.totp.code.DefaultCodeGenerator;
+import dev.samstevens.totp.qr.ZxingPngQrGenerator;
+import dev.samstevens.totp.secret.DefaultSecretGenerator;
+import dev.samstevens.totp.secret.SecretGenerator;
 import dev.samstevens.totp.time.TimeProvider;
 import org.junit.jupiter.api.Test;
 
@@ -46,20 +49,19 @@ public class MFALoginTest {
         try {
             TimeProvider timeProvider = () -> 10000;
             CodeGenerator codeGenerator = new DefaultCodeGenerator();
-            String correctCode = codeGenerator.generate(secret, timeProvider.getTime()) + "\n";
+            String correctCode = codeGenerator.generate(secret, timeProvider.getTime()/30) + "\n";
+            SecretGenerator secretGenerator = new SecretGenerator() {
+                @Override
+                public String generate() {
+                    return "BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV";
+                }
+            };
 
-            InputStream input = System.in;
+            InputStream input = new ByteArrayInputStream(correctCode.getBytes());
 
-            try {
-                System.setIn(new ByteArrayInputStream(correctCode.getBytes()));
-
-                MFALogin test = new MFALogin(new AuthentificatorApp());
-                User testUser = new User();
-                assertTrue(test.twoStepVerif(testUser));
-            }
-            finally {
-                System.setIn(input);
-            }
+            MFALogin test = new MFALogin(new AuthentificatorApp(timeProvider, codeGenerator,input,new ZxingPngQrGenerator(),secretGenerator));
+            User testUser = new User();
+            assertTrue(test.twoStepVerif(testUser));
 
         }
         catch (dev.samstevens.totp.exceptions.CodeGenerationException ex) {
