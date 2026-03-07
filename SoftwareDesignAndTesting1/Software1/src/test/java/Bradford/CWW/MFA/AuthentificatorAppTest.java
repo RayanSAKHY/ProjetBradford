@@ -7,6 +7,9 @@ import dev.samstevens.totp.time.SystemTimeProvider;
 import dev.samstevens.totp.time.TimeProvider;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -22,11 +25,12 @@ public class AuthentificatorAppTest {
             TimeProvider timeProvider =  () -> 10000;
             DefaultCodeGenerator codeGenerator = new DefaultCodeGenerator();
 
-            long baseTime = timeProvider.getTime();
-            String code = codeGenerator.generate(secret, baseTime);
+            long counter = timeProvider.getTime() / 30; //found in this link https://github.com/samdjstevens/java-totp/blob/master/totp/src/main/java/dev/samstevens/totp/code/CodeGenerator.java
+            String code = codeGenerator.generate(secret, counter);
+            InputStream in = new ByteArrayInputStream((code+"\n").getBytes());
 
 
-            AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator);
+            AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator,in);
 
             boolean result = app.verifyCode(secret, code);
 
