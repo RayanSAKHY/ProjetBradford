@@ -29,22 +29,8 @@ public class AuthentificatorAppTest {
             AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator);
 
             boolean result = app.verifyCode(secret, code);
-            System.out.println("Generated code: " + code);
-            System.out.println("Verification result: " + result);
 
-            for (int i = -1; i <= 1; i++) {
-                long time = baseTime + (i * 30000);
-                String c = codeGenerator.generate(secret, time);
-                System.out.println("Generated code at " + (10000+30000*i)+ ": " + c);
-                result = app.verifyCode(secret, c);
-                if (result) {
-                    System.out.println("Successfully verified code: " + c);
-                }
-                else {
-                    System.out.println("Failed verified code: " + c);
-                }
-            }
-            //assertTrue(result);
+            assertTrue(result);
         }
         catch (dev.samstevens.totp.exceptions.CodeGenerationException ex) {
             ex.printStackTrace();
