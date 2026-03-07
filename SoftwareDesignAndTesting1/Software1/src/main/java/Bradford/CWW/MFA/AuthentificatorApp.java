@@ -15,30 +15,52 @@ import org.apache.commons.codec.binary.Base64;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Scanner;
 
 public class AuthentificatorApp implements IMFAStrategy {
     private TimeProvider timeProvider;
     private CodeGenerator codeGenerator;
+    private InputStream in;
+    private Scanner scanner;
+    private QrGenerator qrGenerator;
 
     public AuthentificatorApp() {
-        this(new SystemTimeProvider(), new DefaultCodeGenerator());
+        this(new SystemTimeProvider(), new DefaultCodeGenerator(),System.in,new ZxingPngQrGenerator());
     }
-    public AuthentificatorApp(TimeProvider timeProvider, CodeGenerator codeGenerator) {
+
+    public AuthentificatorApp(TimeProvider timeProvider,CodeGenerator codeGenerator,InputStream in, QrGenerator qrGenerator) {
         this.timeProvider = timeProvider;
         this.codeGenerator = codeGenerator;
+        this.in = in;
+        this.qrGenerator = qrGenerator;
+        scanner = new Scanner(in);
+    }
+
+    public AuthentificatorApp(TimeProvider timeProvider,CodeGenerator codeGenerator,InputStream in) {
+        this(timeProvider,codeGenerator,in,new ZxingPngQrGenerator());
+    }
+
+    public AuthentificatorApp(TimeProvider timeProvider, CodeGenerator codeGenerator) {
+        this(timeProvider,codeGenerator,System.in,new ZxingPngQrGenerator());
     }
 
     @Override
     public boolean TwoStepVerif(User user) {
-        Scanner scanner = new Scanner(System.in);
         SecretGenerator secretGenerator = new DefaultSecretGenerator();
         String secret = secretGenerator.generate();
         // secret = "BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV"
-        byte[] imageData = generateQRCodeData(secret);
-        generateImage(imageData);
+        try {
+            byte[] imageData = generateQRCodeData(secret);
+            generateImage(imageData);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.err.println(e.getMessage());
+        }
         System.out.println("Use the QRCode in your authentificator app and type the code you obtain");
         String code = scanner.nextLine();
+        System.out.println(code);
 
         return verifyCode(secret, code);
     }
@@ -53,29 +75,25 @@ public class AuthentificatorApp implements IMFAStrategy {
                 .period(30)
                 .build();
         try {
-            QrGenerator generator = new ZxingPngQrGenerator();
-            return generator.generate(data);
+            return qrGenerator.generate(data);
         }
         catch (dev.samstevens.totp.exceptions.QrGenerationException ex) {
             ex.printStackTrace();
-            return null;
+            return new byte[0];
         }
     }
 
-    private void generateImage(byte[] imageData) {
+    private void generateImage(byte[] imageData) throws IOException {
         // Source - https://stackoverflow.com/q/15477152
         // Posted by Arvind Sridharan, modified by community. See post 'Timeline' for change history
         // Retrieved 2026-03-06, License - CC BY-SA 3.0
-
-        try {
+            if (imageData == null) {
+                throw new IOException("Image data is null");
+            }
             FileOutputStream fileOutputStream = new FileOutputStream("src/main/java/Bradford/CWW/QRCode.png");
             fileOutputStream.write(imageData);
             fileOutputStream.close();
             System.out.println("QR Code generated: QRCode.png");
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
     }
 
     public boolean verifyCode(String secret, String code) {
@@ -85,7 +103,7 @@ public class AuthentificatorApp implements IMFAStrategy {
 
         // secret = the shared secret for the user
         // code = the code submitted by the user
-        code = code.trim(); //pour retirer les espaces
+        code = code.trim(); //to remove the space
         return verifier.isValidCode(secret, code);
     }
 }
