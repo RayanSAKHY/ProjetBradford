@@ -3,6 +3,7 @@ package Bradford.CWW.MFA;
 import Bradford.CWW.asssets.User;
 //Source : https://github.com/samdjstevens/java-totp
 import dev.samstevens.totp.code.*;
+import dev.samstevens.totp.exceptions.QrGenerationException;
 import dev.samstevens.totp.qr.QrData;
 import dev.samstevens.totp.qr.QrGenerator;
 import dev.samstevens.totp.qr.ZxingPngQrGenerator;
@@ -21,30 +22,31 @@ import java.util.Scanner;
 public class AuthentificatorApp implements IMFAStrategy {
     private TimeProvider timeProvider;
     private CodeGenerator codeGenerator;
-    private InputStream in;
     private Scanner scanner;
     private QrGenerator qrGenerator;
     private SecretGenerator secretGenerator;
 
     public AuthentificatorApp() {
-        this(new SystemTimeProvider(), new DefaultCodeGenerator(),System.in,new ZxingPngQrGenerator(),new DefaultSecretGenerator());
+        this(new SystemTimeProvider(), new DefaultCodeGenerator(),new Scanner(System.in),new ZxingPngQrGenerator(),new DefaultSecretGenerator());
     }
 
-    public AuthentificatorApp(TimeProvider timeProvider,CodeGenerator codeGenerator,InputStream in, QrGenerator qrGenerator,SecretGenerator secretGenerator) {
+    public AuthentificatorApp(TimeProvider timeProvider,CodeGenerator codeGenerator,Scanner scanner, QrGenerator qrGenerator,SecretGenerator secretGenerator) {
         this.timeProvider = timeProvider;
         this.codeGenerator = codeGenerator;
-        this.in = in;
         this.qrGenerator = qrGenerator;
         this.secretGenerator = secretGenerator;
-        scanner = new Scanner(in);
+        this.scanner = scanner;
     }
 
-    public AuthentificatorApp(TimeProvider timeProvider,CodeGenerator codeGenerator,InputStream in) {
-        this(timeProvider,codeGenerator,in,new ZxingPngQrGenerator(),new DefaultSecretGenerator());
+    public AuthentificatorApp(TimeProvider timeProvider,CodeGenerator codeGenerator,Scanner scanner) {
+        this(timeProvider,codeGenerator,scanner,new ZxingPngQrGenerator(),new DefaultSecretGenerator());
     }
 
+    public AuthentificatorApp(Scanner scanner) {
+        this(new SystemTimeProvider(),new DefaultCodeGenerator(),scanner);
+    }
     public AuthentificatorApp(TimeProvider timeProvider, CodeGenerator codeGenerator) {
-        this(timeProvider,codeGenerator,System.in,new ZxingPngQrGenerator(),new DefaultSecretGenerator());
+        this(timeProvider,codeGenerator,new Scanner(System.in),new ZxingPngQrGenerator(),new DefaultSecretGenerator());
     }
 
     @Override
@@ -55,9 +57,10 @@ public class AuthentificatorApp implements IMFAStrategy {
             byte[] imageData = generateQRCodeData(secret);
             generateImage(imageData);
         }
-        catch (IOException e) {
-            e.printStackTrace();
-            System.err.println(e.getMessage());
+        catch (QrGenerationException | IOException ex) {
+            ex.printStackTrace();
+            System.err.println(ex.getMessage());
+            return false;
         }
         System.out.println("Use the QRCode in your authentificator app and type the code you obtain");
         String code = scanner.nextLine();
@@ -66,7 +69,7 @@ public class AuthentificatorApp implements IMFAStrategy {
         return verifyCode(secret, code);
     }
 
-    private byte[] generateQRCodeData(String secret) {
+    private byte[] generateQRCodeData(String secret) throws dev.samstevens.totp.exceptions.QrGenerationException {
         QrData data = new QrData.Builder()
                 .label("example@example.com")
                 .secret(secret)
@@ -75,13 +78,8 @@ public class AuthentificatorApp implements IMFAStrategy {
                 .digits(6)
                 .period(30)
                 .build();
-        try {
-            return qrGenerator.generate(data);
-        }
-        catch (dev.samstevens.totp.exceptions.QrGenerationException ex) {
-            ex.printStackTrace();
-            return new byte[0];
-        }
+        return qrGenerator.generate(data);
+
     }
 
     private void generateImage(byte[] imageData) throws IOException {
@@ -90,6 +88,9 @@ public class AuthentificatorApp implements IMFAStrategy {
         // Retrieved 2026-03-06, License - CC BY-SA 3.0
             if (imageData == null) {
                 throw new IOException("Image data is null");
+            }
+            if (imageData.length == 0) {
+                throw new IOException("Image data is empty");
             }
             FileOutputStream fileOutputStream = new FileOutputStream("src/main/java/Bradford/CWW/QRCode.png");
             fileOutputStream.write(imageData);
