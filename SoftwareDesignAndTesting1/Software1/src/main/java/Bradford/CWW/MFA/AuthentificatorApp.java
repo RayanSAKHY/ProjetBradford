@@ -15,6 +15,7 @@ import dev.samstevens.totp.time.TimeProvider;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
+import javax.swing.*;
 
 public class AuthentificatorApp implements IMFAStrategy {
     private final TimeProvider timeProvider;
@@ -53,16 +54,21 @@ public class AuthentificatorApp implements IMFAStrategy {
         try {
             byte[] imageData = generateQRCodeData(secret);
             generateImage(imageData);
+            SwingUtilities.invokeLater(() -> {
+                        GUIQrCode guiQrCode= new GUIQrCode("src/main/java/Bradford/CWW/MFA/QRCode.png");
+                        guiQrCode.printQrCode();
+
+                    }
+            );
         }
         catch (QrGenerationException | IOException ex) {
             ex.printStackTrace();
             System.err.println(ex.getMessage());
             return false;
         }
+
         System.out.println("Use the QRCode in your authentificator app and type the code you obtain");
         String code = scanner.nextLine();
-        System.out.println(code);
-
         return verifyCode(secret, code);
     }
 
@@ -89,7 +95,7 @@ public class AuthentificatorApp implements IMFAStrategy {
             if (imageData.length == 0) {
                 throw new IOException("Image data is empty");
             }
-            FileOutputStream fileOutputStream = new FileOutputStream("src/main/java/Bradford/CWW/QRCode.png");
+            FileOutputStream fileOutputStream = new FileOutputStream("src/main/java/Bradford/CWW/MFA/QRCode.png");
             fileOutputStream.write(imageData);
             fileOutputStream.close();
             System.out.println("QR Code generated: QRCode.png");
