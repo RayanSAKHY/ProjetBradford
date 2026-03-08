@@ -1,6 +1,6 @@
 package Bradford.CWW.MFA;
 
-import Bradford.CWW.asssets.User;
+
 //Source : https://github.com/samdjstevens/java-totp
 import dev.samstevens.totp.code.*;
 import dev.samstevens.totp.exceptions.QrGenerationException;
@@ -47,7 +47,7 @@ public class AuthentificatorApp implements IMFAStrategy {
     }
 
     @Override
-    public boolean TwoStepVerif(User user) {
+    public boolean TwoStepVerif() {
         String secret = secretGenerator.generate();
         // secret = "BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV"
         try {

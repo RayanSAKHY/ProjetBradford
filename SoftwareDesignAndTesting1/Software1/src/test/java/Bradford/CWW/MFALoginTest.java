@@ -1,17 +1,16 @@
 package Bradford.CWW;
 
 import Bradford.CWW.MFA.AuthentificatorApp;
-import Bradford.CWW.asssets.User;
 import dev.samstevens.totp.code.CodeGenerator;
 import dev.samstevens.totp.code.DefaultCodeGenerator;
 import dev.samstevens.totp.qr.ZxingPngQrGenerator;
-import dev.samstevens.totp.secret.DefaultSecretGenerator;
 import dev.samstevens.totp.secret.SecretGenerator;
 import dev.samstevens.totp.time.TimeProvider;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +19,7 @@ public class MFALoginTest {
     @Test
     public void InvalidStrategyShouldReturnFalse() {
         MFALogin test = new MFALogin(null);
-        assertFalse(test.twoStepVerif(new User()));
+        assertFalse(test.twoStepVerif());
     }
 
     @Test
@@ -33,8 +32,7 @@ public class MFALoginTest {
             System.setIn(new ByteArrayInputStream(wrongCode.getBytes()));
 
             MFALogin test = new MFALogin(new AuthentificatorApp());
-            User testUser = new User();
-            assertFalse(test.twoStepVerif(testUser));
+            assertFalse(test.twoStepVerif());
         }
         finally {
             System.setIn(input);
@@ -59,9 +57,8 @@ public class MFALoginTest {
 
             InputStream input = new ByteArrayInputStream(correctCode.getBytes());
 
-            MFALogin test = new MFALogin(new AuthentificatorApp(timeProvider, codeGenerator,input,new ZxingPngQrGenerator(),secretGenerator));
-            User testUser = new User();
-            assertTrue(test.twoStepVerif(testUser));
+            MFALogin test = new MFALogin(new AuthentificatorApp(timeProvider, codeGenerator,new Scanner(input),new ZxingPngQrGenerator(),secretGenerator));
+            assertTrue(test.twoStepVerif());
 
         }
         catch (dev.samstevens.totp.exceptions.CodeGenerationException ex) {

@@ -1,9 +1,7 @@
 package Bradford.CWW.MFA;
 
-import Bradford.CWW.asssets.User;
 import dev.samstevens.totp.code.CodeGenerator;
 import dev.samstevens.totp.code.DefaultCodeGenerator;
-import dev.samstevens.totp.code.DefaultCodeVerifier;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import dev.samstevens.totp.qr.QrData;
 import dev.samstevens.totp.qr.QrGenerator;
@@ -76,7 +74,7 @@ public class AuthentificatorAppTest {
 
         AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, new Scanner(System.in), qrGenerator, new DefaultSecretGenerator());
 
-        assertFalse(app.TwoStepVerif(new User()));
+        assertFalse(app.TwoStepVerif());
 
     }
 
@@ -95,7 +93,7 @@ public class AuthentificatorAppTest {
 
         AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, new Scanner(System.in), qrGenerator, new DefaultSecretGenerator());
 
-        assertFalse(app.TwoStepVerif(new User()));
+        assertFalse(app.TwoStepVerif());
 
     }
 
@@ -114,7 +112,7 @@ public class AuthentificatorAppTest {
 
         AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, new Scanner(System.in), qrGenerator, new DefaultSecretGenerator());
 
-        assertFalse(app.TwoStepVerif(new User()));
+        assertFalse(app.TwoStepVerif());
 
     }
 }
