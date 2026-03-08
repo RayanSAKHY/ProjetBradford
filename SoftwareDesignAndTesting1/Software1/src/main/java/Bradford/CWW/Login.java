@@ -3,6 +3,7 @@ package Bradford.CWW;
 import Bradford.CWW.MFA.*;
 import Bradford.CWW.asssets.User;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.lang.StringBuilder;
@@ -12,18 +13,24 @@ public class Login {
     private MFALogin mfalogin;
     private Map<String, User> users = new HashMap<>();
     private Scanner scanner;
+    private InputStream in;
 
-    public Login() {
+    public Login(InputStream in) {
         users.put("",new User());
         users.put("test",new User("test","azerty"));
-        scanner = new Scanner(System.in);
+        this.in = in;
+        scanner = new Scanner(in);
+    }
+
+    public Login() {
+        this(System.in);
     }
 
     public boolean login(String username, String password) {
         IMFAStrategy strategy = null;
         boolean connected = false;
         int nbEssai = 0;
-        while (nbEssai < 3 && !connected) {
+        while (nbEssai <= 3 && !connected) {
             System.out.println(credentialsPrint(username, password));
             if (users.containsKey(username)){
                 User user = users.get(username);
@@ -33,16 +40,19 @@ public class Login {
                         int choice = Integer.parseInt(input);
                         switch (choice) {
                             case 1:
-                                strategy = new PhoneCall();
+                                strategy = new PhoneCall(scanner);
                                 break;
                             case 2:
-                                strategy = new CodeSentByEmail();
+                                strategy = new CodeSentByEmail(scanner);
                                 break;
                             case 3:
-                                strategy = new CodeSentBySMS();
+                                strategy = new CodeSentBySMS(scanner);
                                 break;
                             case 4:
-                                strategy = new AuthentificatorApp();
+                                strategy = new AuthentificatorApp(scanner);
+                                break;
+                            case 5:
+                                strategy = new ConsoleMFA(scanner);
                                 break;
                             default:
                                 nbEssai++;
@@ -53,14 +63,13 @@ public class Login {
                         }
 
                         mfalogin = new MFALogin(strategy);
-                        connected =  mfalogin.twoStepVerif(user);
+                        connected =  mfalogin.twoStepVerif();
                         if (!connected) {
                             System.out.println("Two Step Verification failed ");
                             nbEssai++;
                         }
                     }
                     catch (NumberFormatException ex) {
-                        nbEssai++;
                         if (nbEssai < 3) {
                             System.out.println("Please enter a number between 1 and 5");
                         }
@@ -97,6 +106,7 @@ public class Login {
         System.out.println("- Send a code by email (type 2)" );
         System.out.println("- Send a code by text message (type 3)" );
         System.out.println("- Check your authenticator app (type 4)" );
+        System.out.println("- Check your ability to write in the console (type 5)" );
 
         return scanner.nextLine();
     }
