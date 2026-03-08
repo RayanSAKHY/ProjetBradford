@@ -11,20 +11,17 @@ import dev.samstevens.totp.secret.DefaultSecretGenerator;
 import dev.samstevens.totp.secret.SecretGenerator;
 import dev.samstevens.totp.time.SystemTimeProvider;
 import dev.samstevens.totp.time.TimeProvider;
-import org.apache.commons.codec.binary.Base64;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Scanner;
 
 public class AuthentificatorApp implements IMFAStrategy {
-    private TimeProvider timeProvider;
-    private CodeGenerator codeGenerator;
-    private Scanner scanner;
-    private QrGenerator qrGenerator;
-    private SecretGenerator secretGenerator;
+    private final TimeProvider timeProvider;
+    private final CodeGenerator codeGenerator;
+    private final Scanner scanner;
+    private final QrGenerator qrGenerator;
+    private final SecretGenerator secretGenerator;
 
     public AuthentificatorApp() {
         this(new SystemTimeProvider(), new DefaultCodeGenerator(),new Scanner(System.in),new ZxingPngQrGenerator(),new DefaultSecretGenerator());
