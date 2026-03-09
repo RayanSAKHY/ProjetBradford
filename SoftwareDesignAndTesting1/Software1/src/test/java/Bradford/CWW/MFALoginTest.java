@@ -1,6 +1,7 @@
 package Bradford.CWW;
 
 import Bradford.CWW.MFA.AuthentificatorApp;
+import Bradford.CWW.MFA.RandomSecretAuthentificatorApp;
 import dev.samstevens.totp.code.CodeGenerator;
 import dev.samstevens.totp.code.DefaultCodeGenerator;
 import dev.samstevens.totp.qr.ZxingPngQrGenerator;
@@ -31,7 +32,7 @@ public class MFALoginTest {
         try {
             System.setIn(new ByteArrayInputStream(wrongCode.getBytes()));
 
-            MFALogin test = new MFALogin(new AuthentificatorApp());
+            MFALogin test = new MFALogin(new RandomSecretAuthentificatorApp());
             assertFalse(test.twoStepVerif());
         }
         finally {
@@ -47,7 +48,7 @@ public class MFALoginTest {
         try {
             TimeProvider timeProvider = () -> 10000;
             CodeGenerator codeGenerator = new DefaultCodeGenerator();
-            String correctCode = codeGenerator.generate(secret, timeProvider.getTime()/30) + "\n";
+            String correctCode = codeGenerator.generate(secret, timeProvider.getTime()/60) + "\n";
             SecretGenerator secretGenerator = new SecretGenerator() {
                 @Override
                 public String generate() {
@@ -57,7 +58,7 @@ public class MFALoginTest {
 
             InputStream input = new ByteArrayInputStream(correctCode.getBytes());
 
-            MFALogin test = new MFALogin(new AuthentificatorApp(timeProvider, codeGenerator,new Scanner(input),new ZxingPngQrGenerator(),secretGenerator));
+            MFALogin test = new MFALogin(new RandomSecretAuthentificatorApp(new Scanner(input),secretGenerator,timeProvider,codeGenerator,new ZxingPngQrGenerator()));
             assertTrue(test.twoStepVerif());
 
         }
