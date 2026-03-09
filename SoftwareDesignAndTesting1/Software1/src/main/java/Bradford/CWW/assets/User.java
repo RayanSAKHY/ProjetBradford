@@ -1,4 +1,4 @@
-package Bradford.CWW.asssets;
+package Bradford.CWW.assets;
 
 public class User{
 
