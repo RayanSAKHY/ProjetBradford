@@ -6,6 +6,15 @@ public class User{
 
     private String password;
 
+    private String secret;
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
     public String getPassword() {
         return password;
     }
@@ -23,11 +32,15 @@ public class User{
     }
 
     public User() {
-        this("","");
+        this("","","");
     }
 
-    public User(String username, String hashedPassword) {
+    public User(String username, String password) {
+        this(username, password, "");
+    }
+    public User(String username, String hashedPassword,String secret) {
         this.username = username;
         this.password = hashedPassword;
+        this.secret = secret;
     }
 }
