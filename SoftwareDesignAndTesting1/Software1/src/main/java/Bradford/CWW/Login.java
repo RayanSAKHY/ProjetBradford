@@ -10,27 +10,26 @@ import java.lang.StringBuilder;
 import java.util.Scanner;
 
 public class Login {
-    private MFALogin mfalogin;
-    private Map<String, User> users = new HashMap<>();
-    private Scanner scanner;
-    private InputStream in;
+    private final Map<String, User> users = new HashMap<>();
+    private final Scanner scanner;
+
 
     public Login(InputStream in) {
+        this.scanner = new Scanner(in);
         users.put("",new User());
         users.put("test",new User("test","azerty"));
-        this.in = in;
-        scanner = new Scanner(in);
     }
 
     public Login() {
         this(System.in);
     }
 
+
     public boolean login(String username, String password) {
         IMFAStrategy strategy = null;
         boolean connected = false;
         int nbEssai = 0;
-        while (nbEssai <= 3 && !connected) {
+        while (nbEssai < 3 && !connected) {
             System.out.println(credentialsPrint(username, password));
             if (users.containsKey(username)){
                 User user = users.get(username);
@@ -49,10 +48,10 @@ public class Login {
                                 strategy = new CodeSentBySMS(scanner);
                                 break;
                             case 4:
-                                strategy = new AuthentificatorApp(scanner);
+                                strategy = new RandomSecretAuthentificatorApp(scanner);
                                 break;
                             case 5:
-                                strategy = new ConsoleMFA(scanner);
+                                strategy = new FixedSecretAuthentificator(scanner,user);
                                 break;
                             default:
                                 nbEssai++;
@@ -62,7 +61,7 @@ public class Login {
                                 break;
                         }
 
-                        mfalogin = new MFALogin(strategy);
+                        MFALogin mfalogin = new MFALogin(strategy);
                         connected =  mfalogin.twoStepVerif();
                         if (!connected) {
                             System.out.println("Two Step Verification failed ");
@@ -77,13 +76,11 @@ public class Login {
                 }
                 else {
                     System.out.println("Wrong Credentials. Retry in a short time");
-                    nbEssai++;
                     break;
                 }
             }
             else {
                 System.out.println("Wrong Credentials. Retry in a short time");
-                nbEssai++;
                 break;
             }
             if (!connected && nbEssai <3) {
@@ -105,8 +102,8 @@ public class Login {
         System.out.println("- Receiving a phone call (type 1)" );
         System.out.println("- Send a code by email (type 2)" );
         System.out.println("- Send a code by text message (type 3)" );
-        System.out.println("- Check your authenticator app (type 4)" );
-        System.out.println("- Check your ability to write in the console (type 5)" );
+        System.out.println("- Scan a QRCode in an Authentificator app (type 4)" );
+        System.out.println("- Check the code in your Authentificator app (type 5)" );
 
         return scanner.nextLine();
     }
@@ -115,10 +112,12 @@ public class Login {
         StringBuilder output = new StringBuilder();
         output.append("Username: ").append(username);
         output.append("\n");
-        StringBuilder hiddenPassword= new StringBuilder();
-        hiddenPassword.append("*".repeat(password.length()));
-        output.append("Password: ").append(hiddenPassword);
+        output.append("Password: ").append("*".repeat(password.length()));
         output.append("\n");
         return output.toString();
+    }
+
+    public void close() {
+        scanner.close();
     }
 }
