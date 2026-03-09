@@ -50,4 +50,8 @@ public class GUIQrCode {
     public void printQrCode() {
         frame.setVisible(true);
     }
+
+    public void end() {
+        frame.dispose();
+    }
 }
