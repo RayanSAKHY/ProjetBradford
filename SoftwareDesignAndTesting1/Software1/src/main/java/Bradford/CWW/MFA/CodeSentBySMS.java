@@ -3,7 +3,7 @@ package Bradford.CWW.MFA;
 import java.util.Scanner;
 
 public class CodeSentBySMS implements IMFAStrategy {
-    private Scanner scanner;
+    private final Scanner scanner;
 
     public CodeSentBySMS(Scanner scanner) {
         this.scanner = scanner;

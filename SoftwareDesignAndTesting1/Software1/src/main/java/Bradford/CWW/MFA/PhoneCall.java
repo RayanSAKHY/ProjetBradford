@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class PhoneCall implements IMFAStrategy {
 
-    private Scanner scanner;
+    private final Scanner scanner;
 
     public PhoneCall(Scanner scanner) {
         this.scanner = scanner;

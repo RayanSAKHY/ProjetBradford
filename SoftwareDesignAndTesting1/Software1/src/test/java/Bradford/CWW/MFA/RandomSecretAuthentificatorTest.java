@@ -58,7 +58,7 @@ public class RandomSecretAuthentificatorTest {
 
             RandomSecretAuthentificatorApp app = new RandomSecretAuthentificatorApp(new Scanner(in),new DefaultSecretGenerator(),timeProvider,codeGenerator,new ZxingPngQrGenerator(),true) {
                 @Override
-                public void generateQrCode(String secret,String label,String path) throws QrGenerationException, IOException {
+                public void generateQrCode(String secret,String label,String path) throws QrGenerationException {
                     throw new QrGenerationException("", new Exception());
                 }
             };
@@ -88,7 +88,7 @@ public class RandomSecretAuthentificatorTest {
 
             RandomSecretAuthentificatorApp app = new RandomSecretAuthentificatorApp(new Scanner(in),new DefaultSecretGenerator(),timeProvider,codeGenerator,new ZxingPngQrGenerator(),true) {
                 @Override
-                public void generateQrCode(String secret,String label,String path) throws QrGenerationException, IOException {
+                public void generateQrCode(String secret,String label,String path) throws IOException {
                     throw new IOException();
                 }
             };

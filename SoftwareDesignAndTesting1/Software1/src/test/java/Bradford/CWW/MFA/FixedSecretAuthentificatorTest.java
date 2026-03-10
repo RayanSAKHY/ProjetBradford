@@ -206,7 +206,7 @@ public class FixedSecretAuthentificatorTest {
             InputStream in = new ByteArrayInputStream((code+"\n").getBytes());
             QrGenerator qrGenerator = new ZxingPngQrGenerator() {
                 @Override
-                public byte[] generate(QrData data) throws QrGenerationException {
+                public byte[] generate(QrData data) {
                     return null;
                 }
             };
@@ -245,7 +245,7 @@ public class FixedSecretAuthentificatorTest {
 
             QrGenerator qrGenerator = new ZxingPngQrGenerator() {
                 @Override
-                public byte[] generate(QrData data) throws QrGenerationException {
+                public byte[] generate(QrData data){
                     return null;
                 }
             };
