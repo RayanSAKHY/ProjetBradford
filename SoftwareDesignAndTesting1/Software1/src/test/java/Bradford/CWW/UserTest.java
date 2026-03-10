@@ -1,6 +1,6 @@
 package Bradford.CWW;
 
-import Bradford.CWW.asssets.User;
+import Bradford.CWW.assets.User;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
