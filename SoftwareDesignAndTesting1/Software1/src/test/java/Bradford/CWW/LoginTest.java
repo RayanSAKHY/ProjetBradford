@@ -17,8 +17,7 @@ public class LoginTest {
 
         String result = """
                 Username: username
-                Password: ********
-                """;
+                Password: ********""";
 
         Login login = new Login(true);
 
