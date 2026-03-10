@@ -1,6 +1,5 @@
 package Bradford.CWW;
 
-import Bradford.CWW.MFA.AuthentificatorApp;
 import Bradford.CWW.MFA.RandomSecretAuthentificatorApp;
 import dev.samstevens.totp.code.CodeGenerator;
 import dev.samstevens.totp.code.DefaultCodeGenerator;
@@ -31,8 +30,9 @@ public class MFALoginTest {
 
         try {
             System.setIn(new ByteArrayInputStream(wrongCode.getBytes()));
-
-            MFALogin test = new MFALogin(new RandomSecretAuthentificatorApp());
+            RandomSecretAuthentificatorApp app = new RandomSecretAuthentificatorApp();
+            app.setTestMode(true);
+            MFALogin test = new MFALogin(app);
             assertFalse(test.twoStepVerif());
         }
         finally {
@@ -58,7 +58,9 @@ public class MFALoginTest {
 
             InputStream input = new ByteArrayInputStream(correctCode.getBytes());
 
-            MFALogin test = new MFALogin(new RandomSecretAuthentificatorApp(new Scanner(input),secretGenerator,timeProvider,codeGenerator,new ZxingPngQrGenerator()));
+            RandomSecretAuthentificatorApp app = new RandomSecretAuthentificatorApp(new Scanner(input),secretGenerator,timeProvider,codeGenerator,new ZxingPngQrGenerator(),true);
+            app.setTestMode(true);
+            MFALogin test = new MFALogin(app);
             assertTrue(test.twoStepVerif());
 
         }
