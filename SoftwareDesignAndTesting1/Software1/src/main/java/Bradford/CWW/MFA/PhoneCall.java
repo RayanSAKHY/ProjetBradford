@@ -10,11 +10,6 @@ public class PhoneCall implements IMFAStrategy {
         this.scanner = scanner;
     }
 
-    public PhoneCall()
-    {
-        this(new Scanner(System.in));
-    }
-
     @Override
     public boolean TwoStepVerif() {
         System.out.println("Please enter your phone number to receive a call: ");
