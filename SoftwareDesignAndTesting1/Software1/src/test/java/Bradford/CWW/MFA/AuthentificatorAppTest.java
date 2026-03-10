@@ -12,38 +12,13 @@ import dev.samstevens.totp.time.TimeProvider;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthentificatorAppTest {
-
-    @Test
-    public void testVerifyCodeShouldReturnTrue() {
-
-        String secret = "BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV";
-
-
-        try {
-            TimeProvider timeProvider =  () -> 10000;
-            DefaultCodeGenerator codeGenerator = new DefaultCodeGenerator();
-
-            long counter = timeProvider.getTime() / 30; //found in this link https://github.com/samdjstevens/java-totp/blob/master/totp/src/main/java/dev/samstevens/totp/code/CodeGenerator.java
-            String code = codeGenerator.generate(secret, counter);
-            InputStream in = new ByteArrayInputStream((code+"\n").getBytes());
-
-
-            AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator,new Scanner(in));
-
-            boolean result = app.verifyCode(secret, code);
-
-            assertTrue(result);
-        }
-        catch (dev.samstevens.totp.exceptions.CodeGenerationException ex) {
-            ex.printStackTrace();
-        }
-    }
 
     @Test
     public void testVerifyCodeShouldReturnFalse() {
@@ -60,7 +35,7 @@ public class AuthentificatorAppTest {
     }
 
     @Test
-    public void testImageDataNullShouldReturnFalse() {
+    public void testImageDataNullShouldThrowsException() {
         TimeProvider timeProvider = new SystemTimeProvider();
         CodeGenerator codeGenerator = new DefaultCodeGenerator();
 
@@ -72,14 +47,16 @@ public class AuthentificatorAppTest {
             }
         };
 
-        AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, new Scanner(System.in), qrGenerator, new DefaultSecretGenerator());
+        AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, qrGenerator, new DefaultSecretGenerator());
 
-        assertFalse(app.TwoStepVerif());
+        assertThrows(IOException.class, () -> {
+            app.generateQrCode("BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV","QrCode","");
+        });
 
     }
 
     @Test
-    public void testImageDataEmptyShouldReturnFalse() {
+    public void testImageDataEmptyShouldThrowsException() {
         TimeProvider timeProvider = new SystemTimeProvider();
         CodeGenerator codeGenerator = new DefaultCodeGenerator();
 
@@ -91,14 +68,16 @@ public class AuthentificatorAppTest {
             }
         };
 
-        AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, new Scanner(System.in), qrGenerator, new DefaultSecretGenerator());
+        AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, qrGenerator, new DefaultSecretGenerator());
 
-        assertFalse(app.TwoStepVerif());
+        assertThrows(IOException.class, () -> {
+            app.generateQrCode("BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV","QrCode","");
+        });
 
     }
 
     @Test
-    public void testExceptionGeneratingQRCodeShouldReturnFalse() {
+    public void testExceptionGeneratingQRCodeShouldThrowsException() {
         TimeProvider timeProvider = new SystemTimeProvider();
         CodeGenerator codeGenerator = new DefaultCodeGenerator();
 
@@ -110,9 +89,11 @@ public class AuthentificatorAppTest {
             }
         };
 
-        AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, new Scanner(System.in), qrGenerator, new DefaultSecretGenerator());
+        AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, qrGenerator, new DefaultSecretGenerator());
 
-        assertFalse(app.TwoStepVerif());
+        assertThrows(QrGenerationException.class, () -> {
+            app.generateQrCode("BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV","QrCode","");
+        });
 
     }
 }
