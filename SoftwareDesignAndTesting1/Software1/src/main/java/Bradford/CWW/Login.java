@@ -12,8 +12,8 @@ import java.util.Scanner;
 public class Login {
     private final Map<String, User> users = new HashMap<>();
     private final Scanner scanner;
-    private boolean testMode;
-    private InputStream in;
+    private final boolean testMode;
+    private final InputStream in;
 
 
     public Login(InputStream in,boolean testMode) {
