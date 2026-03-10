@@ -11,39 +11,36 @@ import dev.samstevens.totp.time.SystemTimeProvider;
 import dev.samstevens.totp.time.TimeProvider;
 
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.Scanner;
 
 public class RandomSecretAuthentificatorApp extends AuthentificatorApp implements IMFAStrategy {
-    private final TimeProvider timeProvider;
-    private final CodeGenerator codeGenerator;
     private final Scanner scanner;
-    private final QrGenerator qrGenerator;
-    private final SecretGenerator secretGenerator;
 
     public RandomSecretAuthentificatorApp() {
-        this(new Scanner(System.in),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),new DefaultSecretGenerator());
+        this(new Scanner(System.in), new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),false);
     }
 
-    public RandomSecretAuthentificatorApp(Scanner scanner,TimeProvider timeProvider,CodeGenerator codeGenerator, QrGenerator qrGenerator,SecretGenerator secretGenerator) {
+    public RandomSecretAuthentificatorApp(Scanner scanner,SecretGenerator secretGenerator,TimeProvider timeProvider,CodeGenerator codeGenerator,QrGenerator qrGenerator,boolean testMode) {
         this.scanner = scanner;
-        this.timeProvider = timeProvider;
-        this.codeGenerator = codeGenerator;
-        this.qrGenerator = qrGenerator;
-        this.secretGenerator = secretGenerator;
+        super.secretGenerator = secretGenerator;
+        super.timeProvider = timeProvider;
+        super.codeGenerator = codeGenerator;
+        super.qrGenerator = qrGenerator;
+        super.testMode = testMode;
     }
 
-    public RandomSecretAuthentificatorApp(Scanner scanner){
-        this(scanner,new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),new DefaultSecretGenerator());
+    public RandomSecretAuthentificatorApp(Scanner scanner,boolean testMode) {
+        this(scanner, new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),testMode);
     }
+
 
     @Override
     public boolean TwoStepVerif() {
-        SecretGenerator secretGenerator = new DefaultSecretGenerator();
+
         String secret = secretGenerator.generate();
 
         try {
-            generateQrCode(secret);
+            generateQrCode(secret,"QrCode","src/main/java/Bradford/CWW/MFA/QrCode.png");
         }
         catch (QrGenerationException | IOException ex) {
             ex.printStackTrace();
