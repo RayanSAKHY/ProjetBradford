@@ -10,28 +10,40 @@ import java.lang.StringBuilder;
 import java.util.Scanner;
 
 public class Login {
-    private final Map<String, User> users = new HashMap<>();
+    private final Map<String, User> users;
     private final Scanner scanner;
     private final boolean testMode;
     private final InputStream in;
 
 
-    public Login(InputStream in,boolean testMode) {
+    public Login(InputStream in,boolean testMode, Map<String, User> users) {
         this.scanner = new Scanner(in);
         this.in = in;
-        users.put("",new User());
-        users.put("test",new User("test","azerty"));
+        this.users = users;
         this.testMode = testMode;
+        initUsers();
     }
 
+    public Login(InputStream in, boolean testMode) {
+        this(in,testMode,new HashMap<>());
+    }
     public Login(boolean testMode) {
-        this(System.in,testMode);
+        this(System.in,testMode, new HashMap<>());
+    }
+
+    public Login(Map<String, User> users) {
+        this(System.in,false,users);
     }
 
     public Login() {
-        this(System.in,false);
+        this(System.in,false,new HashMap<>());
     }
 
+    public void initUsers() {
+        users.put("",new User());
+        users.put("test",new User("test","azerty"));
+        users.put("I lost",new User("I lost","the game"));
+    }
 
     public boolean login(String username, String password) {
         IMFAStrategy strategy = null;
@@ -122,7 +134,6 @@ public class Login {
         output.append("Username: ").append(username);
         output.append("\n");
         output.append("Password: ").append("*".repeat(password.length()));
-        output.append("\n");
         return output.toString();
     }
 
