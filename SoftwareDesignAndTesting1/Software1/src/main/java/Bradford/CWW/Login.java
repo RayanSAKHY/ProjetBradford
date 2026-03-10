@@ -1,7 +1,7 @@
 package Bradford.CWW;
 
 import Bradford.CWW.MFA.*;
-import Bradford.CWW.asssets.User;
+import Bradford.CWW.assets.User;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -12,16 +12,24 @@ import java.util.Scanner;
 public class Login {
     private final Map<String, User> users = new HashMap<>();
     private final Scanner scanner;
+    private boolean testMode;
+    private InputStream in;
 
 
-    public Login(InputStream in) {
+    public Login(InputStream in,boolean testMode) {
         this.scanner = new Scanner(in);
+        this.in = in;
         users.put("",new User());
         users.put("test",new User("test","azerty"));
+        this.testMode = testMode;
+    }
+
+    public Login(boolean testMode) {
+        this(System.in,testMode);
     }
 
     public Login() {
-        this(System.in);
+        this(System.in,false);
     }
 
 
@@ -48,10 +56,10 @@ public class Login {
                                 strategy = new CodeSentBySMS(scanner);
                                 break;
                             case 4:
-                                strategy = new RandomSecretAuthentificatorApp(scanner);
+                                strategy = new RandomSecretAuthentificatorApp(scanner,testMode);
                                 break;
                             case 5:
-                                strategy = new FixedSecretAuthentificator(scanner,user);
+                                strategy = new FixedSecretAuthentificator(scanner,user,testMode);
                                 break;
                             default:
                                 nbEssai++;
@@ -69,6 +77,7 @@ public class Login {
                         }
                     }
                     catch (NumberFormatException ex) {
+                        nbEssai++;
                         if (nbEssai < 3) {
                             System.out.println("Please enter a number between 1 and 5");
                         }
@@ -118,6 +127,12 @@ public class Login {
     }
 
     public void close() {
-        scanner.close();
+        if (in != System.in) {
+            scanner.close();
+        }
+    }
+
+    public Scanner getScanner() {
+        return scanner;
     }
 }
