@@ -3,7 +3,6 @@ package Bradford.CWW;
 import Bradford.CWW.MFA.*;
 import Bradford.CWW.assets.User;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.lang.StringBuilder;
@@ -13,30 +12,20 @@ public class Login {
     private final Map<String, User> users;
     private final Scanner scanner;
     private final boolean testMode;
-    private final InputStream in;
 
 
-    public Login(InputStream in,boolean testMode, Map<String, User> users) {
-        this.scanner = new Scanner(in);
-        this.in = in;
+    public Login(Scanner scanner,boolean testMode, Map<String, User> users) {
+        this.scanner = scanner;
         this.users = users;
         this.testMode = testMode;
         addingTestUsers();
     }
 
-    public Login(InputStream in, boolean testMode) {
-        this(in,testMode,new HashMap<>());
+    public Login(Scanner scanner, boolean testMode) {
+        this(scanner,testMode,new HashMap<>());
     }
     public Login(boolean testMode) {
-        this(System.in,testMode, new HashMap<>());
-    }
-
-    public Login(Map<String, User> users) {
-        this(System.in,false,users);
-    }
-
-    public Login() {
-        this(System.in,false,new HashMap<>());
+        this(new Scanner(System.in),testMode, new HashMap<>());
     }
 
     public void addingTestUsers() {
@@ -135,12 +124,6 @@ public class Login {
         output.append("\n");
         output.append("Password: ").append("*".repeat(password.length()));
         return output.toString();
-    }
-
-    public void close() {
-        if (in != System.in) {
-            scanner.close();
-        }
     }
 
     public Scanner getScanner() {
