@@ -13,14 +13,14 @@ public class App {
         boolean run = true;
 
         Map<String, User> users = new HashMap<>();
-        System.out.print("Do you wish to create some user (Y or N) ? ");
+        System.out.print("Do you wish to create a user (Y or N) ? ");
         String input = scanner.nextLine();
         switch(input) {
             case "Y":
                 while (run) {
-                    System.out.print("Enter user name: ");
+                    System.out.print("Enter user's name: ");
                     String name = scanner.nextLine();
-                    System.out.print("Enter user password: ");
+                    System.out.print("Enter user's password: ");
                     String password = scanner.nextLine();
                     users.put(name,new User(name,password));
                     System.out.print("Do you still want to create more users (Y or N) ? ");

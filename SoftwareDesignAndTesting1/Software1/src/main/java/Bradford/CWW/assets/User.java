@@ -15,6 +15,7 @@ public class User{
     public void setSecret(String secret) {
         this.secret = secret;
     }
+
     public String getPassword() {
         return password;
     }

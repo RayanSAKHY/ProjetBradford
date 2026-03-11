@@ -21,7 +21,7 @@ public class Login {
         this.in = in;
         this.users = users;
         this.testMode = testMode;
-        initUsers();
+        addingTestUsers();
     }
 
     public Login(InputStream in, boolean testMode) {
@@ -39,7 +39,7 @@ public class Login {
         this(System.in,false,new HashMap<>());
     }
 
-    public void initUsers() {
+    public void addingTestUsers() {
         users.put("",new User());
         users.put("test",new User("test","azerty"));
         users.put("I lost",new User("I lost","the game"));
