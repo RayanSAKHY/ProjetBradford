@@ -45,7 +45,7 @@ public class AuthentificatorApp{
         this(timeProvider,codeGenerator,new ZxingPngQrGenerator(),new DefaultSecretGenerator());
     }
 
-    public void generateQrCode(String secret,String label,String path) throws QrGenerationException,IOException {
+    public void generateQrCode(String secret,String label,String path) throws QrGenerationException,IOException,IllegalArgumentException {
         Path = path;
 
         // secret = "BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV"
@@ -74,7 +74,7 @@ public class AuthentificatorApp{
 
     }
 
-    private void generateImage(byte[] imageData,String path) throws IOException {
+    private void generateImage(byte[] imageData,String path) throws IOException,IllegalArgumentException {
         // Source - https://stackoverflow.com/q/15477152
         // Posted by Arvind Sridharan, modified by community. See post 'Timeline' for change history
         // Retrieved 2026-03-06, License - CC BY-SA 3.0
@@ -83,6 +83,9 @@ public class AuthentificatorApp{
         }
         if (imageData.length == 0) {
             throw new IOException("Image data is empty");
+        }
+        if (path == null) {
+            throw new IllegalArgumentException("Path is null");
         }
         FileOutputStream fileOutputStream = new FileOutputStream(path);
         fileOutputStream.write(imageData);
