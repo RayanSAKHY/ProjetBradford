@@ -30,6 +30,7 @@ public class UserInterface {
         switch(input) {
             case "Y":
                 while (run) {
+                    System.out.print("Each username must be unique or the last user with identical username will be deleted");
                     System.out.print("Enter user's name: ");
                     String name = scanner.nextLine();
                     System.out.print("Enter user's password: ");
