@@ -43,6 +43,7 @@ public class Login {
             if (users.containsKey(username)){
                 User user = users.get(username);
                 if (user.getPassword().equals(password)) {
+                    strategy = null;
                     String input = MFAChoice();
                     try {
                         int choice = Integer.parseInt(input);
