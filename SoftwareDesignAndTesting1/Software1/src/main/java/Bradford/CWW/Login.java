@@ -73,7 +73,7 @@ public class Login {
 
                         MFALogin mfalogin = new MFALogin(strategy);
                         connected =  mfalogin.twoStepVerif();
-                        if (!connected) {
+                        if (!connected && strategy != null) {
                             System.out.println("Two Step Verification failed ");
                             nbEssai++;
                         }
