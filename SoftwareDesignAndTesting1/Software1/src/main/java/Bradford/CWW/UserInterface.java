@@ -30,7 +30,7 @@ public class UserInterface {
         switch(input) {
             case "Y":
                 while (run) {
-                    System.out.print("Each username must be unique or the last user with identical username will be deleted");
+                    System.out.println("Each username must be unique or the last user with identical username will be deleted");
                     System.out.print("Enter user's name: ");
                     String name = scanner.nextLine();
                     System.out.print("Enter user's password: ");
@@ -60,9 +60,9 @@ public class UserInterface {
             input = scanner.nextLine();
             switch (input) {
                 case "1":
-                    System.out.println("Enter the username :  ");
+                    System.out.print("Enter the username :  ");
                     String name = scanner.nextLine();
-                    System.out.println("Enter the password :  ");
+                    System.out.print("Enter the password :  ");
                     String password = scanner.nextLine();
                     login.login(name,password);
                     break;
@@ -72,9 +72,9 @@ public class UserInterface {
                     login.login("test","azerty");
                     System.out.println("Try typing 5 again");
                     login.login("test","azerty");
-                    System.out.println("Try anything");
+                    System.out.println("It will not work");
                     login.login("test","Azerty");
-                    System.out.println("Try typing '");
+                    System.out.println("Try typing 4");
                     login.login("I lost","the game");
                     break;
                 case "3":
