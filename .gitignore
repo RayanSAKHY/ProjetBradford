@@ -1,24 +1,63 @@
-# Compiled class file
+# ========================
+# Java / Maven
+# ========================
+
+# Compiled files
 *.class
 
-# Log file
+# Maven target folders (IMPORTANT pour multi-projets)
+**/target/
+
+# Maven wrapper
+.mvn/
+!**/.mvn/wrapper/maven-wrapper.jar
+
+# Logs
 *.log
 
-# BlueJ files
-*.ctxt
+# ========================
+# IDEs
+# ========================
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# IntelliJ
+.idea/
+*.iml
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
+# Eclipse
+.project
+.classpath
+.settings/
+
+# VS Code
+.vscode/
+
+# ========================
+# OS files
+# ========================
+
+.DS_Store
+Thumbs.db
+
+# ========================
+# Archives
+# ========================
+
 *.zip
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+# ========================
+# Videos (ton problème 👍)
+# ========================
+
+*.mp4
+*.mov
+*.avi
+
+# ========================
+# Optional (attention ⚠️)
+# ========================
+
+# Images (décommente seulement si inutile)
+*.png
+*.jpg
