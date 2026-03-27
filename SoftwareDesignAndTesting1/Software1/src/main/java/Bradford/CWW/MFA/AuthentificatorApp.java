@@ -52,13 +52,14 @@ public class AuthentificatorApp{
         byte [] imageData= generateQRCodeData(secret,label);
 
         generateImage(imageData,path);
-        if (!testMode) {
-            SwingUtilities.invokeLater(() -> {
-                        this.guiQrCode= new GUIQrCode(Path);
-                        this.guiQrCode.printQrCode();
-                    }
-            );
-        }
+        SwingUtilities.invokeLater(() -> {
+            if (guiQrCode == null) {
+                guiQrCode = new GUIQrCode(Path);
+                guiQrCode.printQrCode();
+            } else {
+                guiQrCode.updateQrCode(Path);
+            }
+        });
     }
 
     private byte[] generateQRCodeData(String secret,String label) throws QrGenerationException {
