@@ -53,7 +53,7 @@ public class VotingCenterClient{
             StringBuilder result = new StringBuilder();
             int nbParties = parties.size();
 
-            for (int i = 1; i <= 1000; i++) {
+            for (int i = 1; i <= 10000; i++) {
                 int choice = rand.nextInt(nbParties);
                 String parti = parties.get(choice);
                 mediumVotes.replace(parti, mediumVotes.get(parti) + 1);
