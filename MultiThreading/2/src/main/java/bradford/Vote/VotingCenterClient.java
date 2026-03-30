@@ -37,6 +37,9 @@ public class VotingCenterClient{
         private String centerId;
         private List<String> parties;
         private Map<String, Integer> mediumVotes = new HashMap<>();
+        private List<Integer> favorabilityMeter = new ArrayList<>();
+        private Random rand = new Random();
+        int numParty;
 
         public VotingCenter(String centerId, List<String> parties) {
             this.centerId = centerId;
@@ -44,19 +47,48 @@ public class VotingCenterClient{
             for (String party : parties) {
                 mediumVotes.put(party, 0);
             }
+            numParty = parties.size();
+            createFavorabilityMeter();
+        }
+
+        private void createFavorabilityMeter() {
+            int sum =0;
+
+            for (int i = 0; i < numParty-1; i++) {
+                int bound = 100/(numParty);
+                int favorability = rand.nextInt(bound)+ numParty;
+                double factor = 0.5;
+                while (favorability + sum > 100) {
+                    if (bound > 5) {
+                        bound = (int) (bound*factor);
+                        favorability = rand.nextInt(bound) +numParty;
+                    }
+                    else {
+                        favorability = 0;
+                    }
+                }
+                sum += favorability;
+                favorabilityMeter.add(sum);
+            }
+            favorabilityMeter.add(100);
+            System.out.println("Favorability meter: " + favorabilityMeter);
         }
 
         public String vote() {
 
-            Random rand = new Random();
-
             StringBuilder result = new StringBuilder();
-            int nbParties = parties.size();
 
             for (int i = 1; i <= 10000; i++) {
-                int choice = rand.nextInt(nbParties);
-                String parti = parties.get(choice);
-                mediumVotes.replace(parti, mediumVotes.get(parti) + 1);
+                double rate = rand.nextDouble();
+                for (int j = 0;j<numParty;j++) {
+                    if (rate < favorabilityMeter.get(j)/100.0) {
+                        String parti = parties.get(j);
+                        mediumVotes.replace(parti, mediumVotes.get(parti) + 1);
+                        break;
+                    }
+                }
+
+
             }
 
             result.append("Center:").append(centerId);
