@@ -56,8 +56,8 @@ public class CentralVotingServer {
 
         Agregator(Map<String,Map<String,Integer>> result) {
             this.mediumResult=result;
-            finalResult=agregate();
             partyNumber=result.size();
+            finalResult=agregate();
         }
 
         public void getResult() {
@@ -138,6 +138,7 @@ public class CentralVotingServer {
                             String party = part[0];
                             String vote = part[1];
                             int votesCount = Integer.parseInt(vote.split(" ")[0]);
+                            System.out.println(party+": "+vote);
                             centerResult.put(party,votesCount);
                         }
                     }
