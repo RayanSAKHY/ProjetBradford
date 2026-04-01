@@ -1,20 +1,21 @@
 package Bradford.CWW.MFA;
 
+import Bradford.CWW.Input.UserInput;
+
 import java.util.Scanner;
 
 public class PhoneCall implements IMFAStrategy {
 
-    private final Scanner scanner;
+    private final UserInput userInput;
 
-    public PhoneCall(Scanner scanner) {
-        this.scanner = scanner;
+    public PhoneCall(UserInput userInput) {
+        this.userInput = userInput;
     }
 
     @Override
     public boolean TwoStepVerif() {
-        System.out.println("Please enter your phone number to receive a call: ");
-        String phoneNumber = scanner.nextLine();
-        System.out.println("call to "+phoneNumber);
+        String phoneNumber = userInput.askInput("Please enter your phone number to receive a call: ");
+        userInput.showMessage("call to "+phoneNumber);
         return true;
     }
 }

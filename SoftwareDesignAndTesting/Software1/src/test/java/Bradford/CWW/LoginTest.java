@@ -1,5 +1,7 @@
 package Bradford.CWW;
 
+import Bradford.CWW.Input.ConsoleInput;
+import Bradford.CWW.Input.UserInput;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -31,7 +33,7 @@ public class LoginTest {
 
         Login login = new Login(true);
 
-        assertFalse(login.login(username,password));
+        assertFalse(login.loginConsole(username,password));
     }
 
     @Test
@@ -40,7 +42,7 @@ public class LoginTest {
         String password = "";
         Login login = new Login(true);
 
-        assertFalse(login.login(username,password));
+        assertFalse(login.loginConsole(username,password));
     }
 
     @Test
@@ -50,9 +52,9 @@ public class LoginTest {
 
         InputStream input = new ByteArrayInputStream("1\nbhsfkgvbkbk\n".getBytes());
 
-        Login login = new Login(new Scanner(input),true);
+        Login login = new Login(new ConsoleInput(new Scanner(input)),true);
 
-        boolean result = login.login(username,password);
+        boolean result = login.loginConsole(username,password);
         assertTrue(result);
     }
 
@@ -63,9 +65,9 @@ public class LoginTest {
 
         InputStream input = new ByteArrayInputStream("2\nbhsfkgvbkbk\n".getBytes());
 
-        Login login = new Login(new Scanner(input),true);
+        Login login = new Login(new ConsoleInput(new Scanner(input)),true);
 
-        boolean result = login.login(username,password);
+        boolean result = login.loginConsole(username,password);
         assertTrue(result);
     }
 
@@ -76,9 +78,9 @@ public class LoginTest {
 
         InputStream input = new ByteArrayInputStream("3\nbhsfkgvbkbk\n".getBytes());
 
-        Login login = new Login(new Scanner(input),true);
+        Login login = new Login(new ConsoleInput(new Scanner(input)),true);
 
-        boolean result = login.login(username,password);
+        boolean result = login.loginConsole(username,password);
         assertTrue(result);
     }
 
@@ -89,9 +91,9 @@ public class LoginTest {
 
         InputStream input = new ByteArrayInputStream("4\nbhsfkgvbkbk\n4\nguodj\n4\nguofsvb\n".getBytes());
 
-        Login login = new Login(new Scanner(input),true);
+        Login login = new Login(new ConsoleInput(new Scanner(input)),true);
 
-        boolean result = login.login(username,password);
+        boolean result = login.loginConsole(username,password);
         assertFalse(result);
     }
 
@@ -102,9 +104,9 @@ public class LoginTest {
 
         InputStream input = new ByteArrayInputStream("5\nbhsfkgvbkbk\n5\nguodj\n5\nguofsvb\n".getBytes());
 
-        Login login = new Login(new Scanner(input),true);
+        Login login = new Login(new ConsoleInput(new Scanner(input)),true);
 
-        boolean result = login.login(username,password);
+        boolean result = login.loginConsole(username,password);
         assertFalse(result);
     }
 
@@ -115,9 +117,9 @@ public class LoginTest {
 
         InputStream input = new ByteArrayInputStream("6\n1\ngfhskjbfg\n".getBytes());
 
-        Login login = new Login(new Scanner(input),true);
+        Login login = new Login(new ConsoleInput(new Scanner(input)),true);
 
-        boolean result = login.login(username,password);
+        boolean result = login.loginConsole(username,password);
         assertTrue(result);
     }
 
@@ -128,9 +130,9 @@ public class LoginTest {
 
         InputStream input = new ByteArrayInputStream("6\n7\n8\n".getBytes());
 
-        Login login = new Login(new Scanner(input),true);
+        Login login = new Login(new ConsoleInput(new Scanner(input)),true);
 
-        boolean result = login.login(username,password);
+        boolean result = login.loginConsole(username,password);
         assertFalse(result);
     }
 
@@ -141,9 +143,9 @@ public class LoginTest {
 
         InputStream input = new ByteArrayInputStream("hf\ngfdkh\ngfhskjbfg\n".getBytes());
 
-        Login login = new Login(new Scanner(input),true);
+        Login login = new Login(new ConsoleInput(new Scanner(input)),true);
 
-        boolean result = login.login(username,password);
+        boolean result = login.loginConsole(username,password);
         assertFalse(result);
     }
 
@@ -154,18 +156,18 @@ public class LoginTest {
 
         InputStream input = new ByteArrayInputStream("hf\ngfdkh\n1\niguhfdi\n".getBytes());
 
-        Login login = new Login(new Scanner(input),true);
+        Login login = new Login(new ConsoleInput(new Scanner(input)),true);
 
-        boolean result = login.login(username,password);
+        boolean result = login.loginConsole(username,password);
         assertTrue(result);
     }
 
     @Test
     public void testGetScanneer() {
         Login login = new Login(true);
-        Scanner scanner = login.getScanner();
+        UserInput userInput = login.getUserInput();
 
-        assertNotNull(scanner);
+        assertNotNull(userInput);
     }
 
 }

@@ -1,5 +1,6 @@
 package Bradford.CWW.MFA;
 
+import Bradford.CWW.Input.UserInput;
 import Bradford.CWW.assets.User;
 import dev.samstevens.totp.code.CodeGenerator;
 import dev.samstevens.totp.code.DefaultCodeGenerator;
@@ -16,11 +17,11 @@ import java.util.Scanner;
 
 public class FixedSecretAuthentificator extends AuthentificatorApp implements IMFAStrategy{
     private final User user;
-    private final Scanner scanner;
+    private final UserInput userInput;
 
-    public FixedSecretAuthentificator(Scanner scanner, User user, SecretGenerator secretGenerator, TimeProvider timeProvider, CodeGenerator codeGenerator, QrGenerator qrGenerator, boolean testMode) {
+    public FixedSecretAuthentificator(UserInput userInput, User user, SecretGenerator secretGenerator, TimeProvider timeProvider, CodeGenerator codeGenerator, QrGenerator qrGenerator, boolean testMode) {
         this.user = user;
-        this.scanner = scanner;
+        this.userInput = userInput;
         super.secretGenerator = secretGenerator;
         super.timeProvider = timeProvider;
         super.codeGenerator = codeGenerator;
@@ -28,8 +29,8 @@ public class FixedSecretAuthentificator extends AuthentificatorApp implements IM
         super.testMode = testMode;
     }
 
-    public FixedSecretAuthentificator(Scanner scanner,User user,boolean testMode) {
-        this(scanner,user,new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),testMode);
+    public FixedSecretAuthentificator(UserInput userInput,User user,boolean testMode) {
+        this(userInput,user,new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),testMode);
     }
 
     @Override
@@ -41,8 +42,7 @@ public class FixedSecretAuthentificator extends AuthentificatorApp implements IM
         }
 
         if (!user.getSecret().isEmpty()) {
-            System.out.println("Do you want to use the saved secret (Y or N) ?");
-            String input = scanner.nextLine();
+            String input = userInput.askInput("Do you want to use the saved secret (Y or N) ?");
 
             switch (input) {
                 case "Y":
@@ -57,7 +57,7 @@ public class FixedSecretAuthentificator extends AuthentificatorApp implements IM
                     }
                     break;
                 default:
-                    System.out.println("Invalid input");
+                    userInput.showMessage("Invalid input");
                     break;
             }
         } else {
@@ -72,8 +72,7 @@ public class FixedSecretAuthentificator extends AuthentificatorApp implements IM
 
         String finalSecret = user.getSecret();
 
-        System.out.println("Please enter the secret code on your authentification app ");
-        String code = scanner.nextLine();
+        String code = userInput.askInput("Please enter the secret code on your authentification app ");
 
         return verifyCode(finalSecret, code);
     }

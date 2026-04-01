@@ -1,18 +1,20 @@
 package Bradford.CWW;
 
+import Bradford.CWW.Input.ConsoleInput;
+import Bradford.CWW.Input.UserInput;
 import Bradford.CWW.assets.UserDataSingleton;
 
 import java.io.InputStream;
 import java.util.Scanner;
 
 public class UserInterface {
-    public Scanner scanner = new Scanner(System.in);
+    public UserInput userInput;
     public boolean testMode;
     public InputStream input;
     private UserDataSingleton users = new UserDataSingleton();
 
     public UserInterface(InputStream input,boolean testMode) {
-        this.scanner = new Scanner(input);
+        this.userInput = new ConsoleInput(new Scanner(input));
         this.testMode = testMode;
     }
 
@@ -23,24 +25,20 @@ public class UserInterface {
     public void UseApp(){
         boolean run = true;
 
-        System.out.print("Do you wish to create a user (Y or N) ? ");
-        String input = scanner.nextLine();
+        String input = userInput.askInput("Do you wish to create a user (Y or N) ? ");
         switch(input) {
             case "Y":
                 while (run) {
-                    System.out.println("Each username must be unique or the last user with identical username will be deleted");
-                    System.out.print("Enter user's name: ");
-                    String name = scanner.nextLine();
-                    System.out.print("Enter user's password: ");
-                    String password = scanner.nextLine();
+                    userInput.showMessage("Each username must be unique or the last user with identical username will be deleted");
+                    String name = userInput.askInput("Enter user's name: ");
+                    String password = userInput.askInput("Enter user's password: ");
                     users.getInstance().addUser(name,password);
-                    System.out.print("Do you still want to create more users (Y or N) ? ");
-                    input = scanner.nextLine();
+                    input = userInput.askInput("Do you still want to create more users (Y or N) ? ");
                     if (input.equals("N")) {
                         run = false;
                     }
                     else if (!input.equals("Y")) {
-                        System.out.println("Invalid input you cannot create more users");
+                        userInput.showMessage("Invalid input you cannot create more users");
                         run = false;
                     }
                 }
@@ -48,49 +46,44 @@ public class UserInterface {
             case "N":
                 break;
             default:
-                System.out.println("Next time type something valid");
+                userInput.showMessage("Next time type something valid");
                 break;
         }
         run = true;
-        Login login = new Login(scanner,testMode,users);
+        Login login = new Login(userInput,testMode,users);
         while(run){
-            System.out.print("Do you want to try connecting with your own users (type 1), using the demonstration users (type 2) or qui the application (type 3) ? ");
-            input = scanner.nextLine();
+            input = userInput.askInput("Do you want to try connecting with your own users (type 1), using the demonstration users (type 2) or qui the application (type 3) ? ");
             switch (input) {
                 case "1":
-                    System.out.print("Enter the username :  ");
-                    String name = scanner.nextLine();
-                    System.out.print("Enter the password :  ");
-                    String password = scanner.nextLine();
-                    login.login(name,password);
+                    String name = userInput.askInput("Enter the username :  ");
+                    String password = userInput.askInput("Enter the password :  ");
+                    login.loginConsole(name,password);
                     break;
                 case "2":
                     run = false;
-                    System.out.println("Try typing 5");
-                    login.login("test","azerty");
-                    System.out.println("Try typing 5 again");
-                    login.login("test","azerty");
-                    System.out.println("It will not work");
-                    login.login("test","Azerty");
-                    System.out.println("Try typing 4");
-                    login.login("I lost","the game");
+                    userInput.showMessage("Try typing 5");
+                    login.loginConsole("test","azerty");
+                    userInput.showMessage("Try typing 5 again");
+                    login.loginConsole("test","azerty");
+                    userInput.showMessage("It will not work");
+                    login.loginConsole("test","Azerty");
+                    userInput.showMessage("Try typing 4");
+                    login.loginConsole("I lost","the game");
                     break;
                 case "3":
                     run = false;
                     break;
                 default:
                     run = false;
-                    System.out.println("Invalid input the application will end");
+                    userInput.showMessage("Invalid input the application will end");
             }
-
-
         }
         close();
     }
 
     public void close() {
         if (input != System.in) {
-            scanner.close();
+            userInput.close();
         }
     }
 }

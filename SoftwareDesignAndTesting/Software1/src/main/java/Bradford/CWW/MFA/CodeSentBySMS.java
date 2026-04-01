@@ -1,19 +1,20 @@
 package Bradford.CWW.MFA;
 
+import Bradford.CWW.Input.UserInput;
+
 import java.util.Scanner;
 
 public class CodeSentBySMS implements IMFAStrategy {
-    private final Scanner scanner;
+    private final UserInput userInput;
 
-    public CodeSentBySMS(Scanner scanner) {
-        this.scanner = scanner;
+    public CodeSentBySMS(UserInput userInput) {
+        this.userInput = userInput;
     }
 
     @Override
     public boolean TwoStepVerif() {
-        System.out.println("Please enter your phone number to receive a code by SMS: ");
-        String phoneNumber = scanner.nextLine();
-        System.out.println("send a code to "+phoneNumber);
+        String phoneNumber = userInput.askInput("Please enter your phone number to receive a code by SMS: ");
+        userInput.showMessage("send a code to "+phoneNumber);
         return true;
     }
 }

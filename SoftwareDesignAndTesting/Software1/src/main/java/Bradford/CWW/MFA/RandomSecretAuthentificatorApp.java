@@ -1,5 +1,7 @@
 package Bradford.CWW.MFA;
 
+import Bradford.CWW.Input.ConsoleInput;
+import Bradford.CWW.Input.UserInput;
 import dev.samstevens.totp.code.CodeGenerator;
 import dev.samstevens.totp.code.DefaultCodeGenerator;
 import dev.samstevens.totp.exceptions.QrGenerationException;
@@ -14,14 +16,14 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class RandomSecretAuthentificatorApp extends AuthentificatorApp implements IMFAStrategy {
-    private final Scanner scanner;
+    private final UserInput userInput;
 
     public RandomSecretAuthentificatorApp() {
-        this(new Scanner(System.in), new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),false);
+        this(new ConsoleInput(new Scanner(System.in)), new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),false);
     }
 
-    public RandomSecretAuthentificatorApp(Scanner scanner,SecretGenerator secretGenerator,TimeProvider timeProvider,CodeGenerator codeGenerator,QrGenerator qrGenerator,boolean testMode) {
-        this.scanner = scanner;
+    public RandomSecretAuthentificatorApp(UserInput userInput,SecretGenerator secretGenerator,TimeProvider timeProvider,CodeGenerator codeGenerator,QrGenerator qrGenerator,boolean testMode) {
+        this.userInput = userInput;
         super.secretGenerator = secretGenerator;
         super.timeProvider = timeProvider;
         super.codeGenerator = codeGenerator;
@@ -29,8 +31,8 @@ public class RandomSecretAuthentificatorApp extends AuthentificatorApp implement
         super.testMode = testMode;
     }
 
-    public RandomSecretAuthentificatorApp(Scanner scanner,boolean testMode) {
-        this(scanner, new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),testMode);
+    public RandomSecretAuthentificatorApp(UserInput userInput,boolean testMode) {
+        this(userInput, new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),testMode);
     }
 
 
@@ -48,8 +50,7 @@ public class RandomSecretAuthentificatorApp extends AuthentificatorApp implement
         }
 
 
-        System.out.println("Use the QRCode in your authentificator app and type the code you obtain");
-        String code = scanner.nextLine();
+        String code = userInput.askInput("Use the QRCode in your authentificator app and type the code you obtain");
 
         return verifyCode(secret,code);
     }

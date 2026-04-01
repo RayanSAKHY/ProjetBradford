@@ -1,5 +1,6 @@
 package Bradford.CWW.MFA;
 
+import Bradford.CWW.Input.ConsoleInput;
 import Bradford.CWW.assets.User;
 import dev.samstevens.totp.code.DefaultCodeGenerator;
 import dev.samstevens.totp.exceptions.QrGenerationException;
@@ -35,7 +36,7 @@ public class FixedSecretAuthentificatorTest {
             InputStream in = new ByteArrayInputStream(("Y\n"+code+"\n").getBytes());
 
 
-            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new Scanner(in),new User("","","BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV"),new DefaultSecretGenerator(),timeProvider,codeGenerator,new ZxingPngQrGenerator(),true);
+            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new ConsoleInput(new Scanner(in)),new User("","","BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV"),new DefaultSecretGenerator(),timeProvider,codeGenerator,new ZxingPngQrGenerator(),true);
 
             boolean result = app.TwoStepVerif();
 
@@ -66,7 +67,7 @@ public class FixedSecretAuthentificatorTest {
                     return "BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV";
                 }
             };
-            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new Scanner(in),new User(),secretGenerator,timeProvider,codeGenerator,new ZxingPngQrGenerator(),true);
+            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new ConsoleInput(new Scanner(in)),new User(),secretGenerator,timeProvider,codeGenerator,new ZxingPngQrGenerator(),true);
 
             boolean result = app.TwoStepVerif();
 
@@ -97,7 +98,7 @@ public class FixedSecretAuthentificatorTest {
                     return secret;
                 }
             };
-            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new Scanner(in),new User("","",secret),secretGenerator,timeProvider,codeGenerator,new ZxingPngQrGenerator(),true);
+            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new ConsoleInput(new Scanner(in)),new User("","",secret),secretGenerator,timeProvider,codeGenerator,new ZxingPngQrGenerator(),true);
 
             boolean result = app.TwoStepVerif();
 
@@ -123,7 +124,7 @@ public class FixedSecretAuthentificatorTest {
             InputStream in = new ByteArrayInputStream(("u\n"+code+"\n").getBytes());
 
 
-            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new Scanner(in),new User("","","BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV"),new DefaultSecretGenerator(),timeProvider,codeGenerator,new ZxingPngQrGenerator(),true);
+            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new ConsoleInput(new Scanner(in)),new User("","","BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV"),new DefaultSecretGenerator(),timeProvider,codeGenerator,new ZxingPngQrGenerator(),true);
 
             boolean result = app.TwoStepVerif();
 
@@ -149,7 +150,7 @@ public class FixedSecretAuthentificatorTest {
             InputStream in = new ByteArrayInputStream((code+"\n").getBytes());
 
 
-            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new Scanner(in),null,new DefaultSecretGenerator(),timeProvider,codeGenerator,new ZxingPngQrGenerator(),true);
+            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new ConsoleInput(new Scanner(in)),null,new DefaultSecretGenerator(),timeProvider,codeGenerator,new ZxingPngQrGenerator(),true);
 
             boolean result = app.TwoStepVerif();
 
@@ -180,7 +181,7 @@ public class FixedSecretAuthentificatorTest {
                 }
             };
 
-            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new Scanner(in),new User(),new DefaultSecretGenerator(),timeProvider,codeGenerator,qrGenerator,true);
+            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new ConsoleInput(new Scanner(in)),new User(),new DefaultSecretGenerator(),timeProvider,codeGenerator,qrGenerator,true);
 
             boolean result = app.TwoStepVerif();
 
@@ -211,7 +212,7 @@ public class FixedSecretAuthentificatorTest {
                 }
             };
 
-            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new Scanner(in),new User(),new DefaultSecretGenerator(),timeProvider,codeGenerator,qrGenerator,true);
+            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new ConsoleInput(new Scanner(in)),new User(),new DefaultSecretGenerator(),timeProvider,codeGenerator,qrGenerator,true);
 
             boolean result = app.TwoStepVerif();
 
@@ -249,7 +250,7 @@ public class FixedSecretAuthentificatorTest {
                     return null;
                 }
             };
-            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new Scanner(in),new User("","",secret),secretGenerator,timeProvider,codeGenerator,qrGenerator,true);
+            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new ConsoleInput(new Scanner(in)),new User("","",secret),secretGenerator,timeProvider,codeGenerator,qrGenerator,true);
 
             boolean result = app.TwoStepVerif();
 
@@ -287,7 +288,7 @@ public class FixedSecretAuthentificatorTest {
                     throw new QrGenerationException("test",new Exception());
                 }
             };
-            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new Scanner(in),new User("","",secret),secretGenerator,timeProvider,codeGenerator,qrGenerator,true);
+            FixedSecretAuthentificator app = new FixedSecretAuthentificator(new ConsoleInput(new Scanner(in)),new User("","",secret),secretGenerator,timeProvider,codeGenerator,qrGenerator,true);
 
             boolean result = app.TwoStepVerif();
 
