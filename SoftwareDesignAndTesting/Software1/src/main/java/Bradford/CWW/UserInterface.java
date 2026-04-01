@@ -1,16 +1,15 @@
 package Bradford.CWW;
 
-import Bradford.CWW.assets.User;
+import Bradford.CWW.assets.UserDataSingleton;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class UserInterface {
     public Scanner scanner = new Scanner(System.in);
     public boolean testMode;
     public InputStream input;
+    private UserDataSingleton users = new UserDataSingleton();
 
     public UserInterface(InputStream input,boolean testMode) {
         this.scanner = new Scanner(input);
@@ -24,7 +23,6 @@ public class UserInterface {
     public void UseApp(){
         boolean run = true;
 
-        Map<String, User> users = new HashMap<>();
         System.out.print("Do you wish to create a user (Y or N) ? ");
         String input = scanner.nextLine();
         switch(input) {
@@ -35,7 +33,7 @@ public class UserInterface {
                     String name = scanner.nextLine();
                     System.out.print("Enter user's password: ");
                     String password = scanner.nextLine();
-                    users.put(name,new User(name,password));
+                    users.getInstance().addUser(name,password);
                     System.out.print("Do you still want to create more users (Y or N) ? ");
                     input = scanner.nextLine();
                     if (input.equals("N")) {

@@ -1,38 +1,32 @@
 package Bradford.CWW;
 
 import Bradford.CWW.MFA.*;
-import Bradford.CWW.assets.User;
+import Bradford.CWW.assets.*;
+import Bradford.CWW.assets.UserDataSingleton;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.lang.StringBuilder;
 import java.util.Scanner;
 
 public class Login {
-    private final Map<String, User> users;
+    private final UserDataSingleton users;
     private final Scanner scanner;
     private final boolean testMode;
 
 
-    public Login(Scanner scanner,boolean testMode, Map<String, User> users) {
+    public Login(Scanner scanner,boolean testMode,UserDataSingleton users) {
         this.scanner = scanner;
-        this.users = users;
         this.testMode = testMode;
-        addingTestUsers();
+        this.users = users;
     }
 
     public Login(Scanner scanner, boolean testMode) {
-        this(scanner,testMode,new HashMap<>());
+        this(scanner,testMode,new UserDataSingleton());
     }
     public Login(boolean testMode) {
-        this(new Scanner(System.in),testMode, new HashMap<>());
+        this(new Scanner(System.in),testMode);
     }
 
-    public void addingTestUsers() {
-        users.put("",new User());
-        users.put("test",new User("test","azerty"));
-        users.put("I lost",new User("I lost","the game"));
-    }
+
 
     public boolean login(String username, String password) {
         IMFAStrategy strategy = null;
@@ -40,8 +34,8 @@ public class Login {
         int nbEssai = 0;
         while (nbEssai < 3 && !connected) {
             System.out.println(credentialsPrint(username, password));
-            if (users.containsKey(username)){
-                User user = users.get(username);
+            if (users.getInstance().usernameExists(username)){
+                User user = users.getInstance().getUser(username);
                 if (user.getPassword().equals(password)) {
                     strategy = null;
                     String input = MFAChoice();
