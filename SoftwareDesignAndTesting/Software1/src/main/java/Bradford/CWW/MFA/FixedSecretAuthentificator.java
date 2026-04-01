@@ -12,6 +12,7 @@ import dev.samstevens.totp.secret.SecretGenerator;
 import dev.samstevens.totp.time.SystemTimeProvider;
 import dev.samstevens.totp.time.TimeProvider;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -19,7 +20,8 @@ public class FixedSecretAuthentificator extends AuthentificatorApp implements IM
     private final User user;
     private final UserInput userInput;
 
-    public FixedSecretAuthentificator(UserInput userInput, User user, SecretGenerator secretGenerator, TimeProvider timeProvider, CodeGenerator codeGenerator, QrGenerator qrGenerator, boolean testMode) {
+    public FixedSecretAuthentificator(UserInput userInput, User user, SecretGenerator secretGenerator, TimeProvider timeProvider,
+                                      CodeGenerator codeGenerator, QrGenerator qrGenerator, boolean testMode) {
         this.user = user;
         this.userInput = userInput;
         super.secretGenerator = secretGenerator;
@@ -27,6 +29,12 @@ public class FixedSecretAuthentificator extends AuthentificatorApp implements IM
         super.codeGenerator = codeGenerator;
         super.qrGenerator = qrGenerator;
         super.testMode = testMode;
+
+        String folder = "qrCode/users";
+        File dir = new File(folder);
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
     }
 
     public FixedSecretAuthentificator(UserInput userInput,User user,boolean testMode) {
@@ -49,7 +57,7 @@ public class FixedSecretAuthentificator extends AuthentificatorApp implements IM
                     break;
                 case "N":
                     try {
-                        assignSecret(user,"src/main/java/Bradford/CWW/assets/QrCode/QrCode"+user.getUsername()+".png","QrCode" + user.getUsername());
+                        assignSecret(user,"qrCode/users/QrCode"+user.getUsername()+".png","QrCode" + user.getUsername());
                     }
                     catch (QrGenerationException | IOException ex) {
                         ex.printStackTrace();
@@ -62,7 +70,7 @@ public class FixedSecretAuthentificator extends AuthentificatorApp implements IM
             }
         } else {
             try {
-                assignSecret(user,"src/main/java/Bradford/CWW/assets/QrCode/QrCode"+user.getUsername()+".png","QrCode" + user.getUsername());
+                assignSecret(user,"qrCode/users/QrCode"+user.getUsername()+".png","QrCode" + user.getUsername());
             }
             catch (QrGenerationException | IOException ex) {
                 ex.printStackTrace();

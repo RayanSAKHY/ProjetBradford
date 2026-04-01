@@ -42,8 +42,38 @@ public class Login {
         }
     }
 
-    public boolean loginConsole(String username, String password) {
+    public boolean loginMFAJavaFX(int choice,User user) {
         IMFAStrategy strategy = null;
+        switch (choice) {
+            case 1:
+                strategy = new PhoneCall(userInput);
+                break;
+            case 2:
+                strategy = new CodeSentByEmail(userInput);
+                break;
+            case 3:
+                strategy = new CodeSentBySMS(userInput);
+                break;
+            case 4:
+                strategy = new RandomSecretAuthentificatorApp(userInput,testMode);
+                break;
+            case 5:
+                strategy = new FixedSecretAuthentificator(userInput,user,testMode);
+                break;
+            default:
+                break;
+        }
+
+        MFALogin mfalogin = new MFALogin(strategy);
+        boolean connected = mfalogin.twoStepVerif();
+        if (!connected && strategy != null) {
+            userInput.showMessage("Two Step Verification failed ") ;
+            return false;
+        }
+        return true;
+    }
+
+    public boolean loginConsole(String username, String password) {
         boolean connected = false;
         int nbEssai = 0;
         while (nbEssai < 3 && !connected) {
@@ -51,38 +81,12 @@ public class Login {
             if (users.getInstance().usernameExists(username)){
                 User user = users.getInstance().getUser(username);
                 if (user.getPassword().equals(password)) {
-                    strategy = null;
                     String input = MFAChoice();
                     try {
                         int choice = Integer.parseInt(input);
-                        switch (choice) {
-                            case 1:
-                                strategy = new PhoneCall(userInput);
-                                break;
-                            case 2:
-                                strategy = new CodeSentByEmail(userInput);
-                                break;
-                            case 3:
-                                strategy = new CodeSentBySMS(userInput);
-                                break;
-                            case 4:
-                                strategy = new RandomSecretAuthentificatorApp(userInput,testMode);
-                                break;
-                            case 5:
-                                strategy = new FixedSecretAuthentificator(userInput,user,testMode);
-                                break;
-                            default:
-                                nbEssai++;
-                                if (nbEssai < 3) {
-                                    userInput.showMessage("Please enter a valid choice");
-                                }
-                                break;
-                        }
+                        connected =  loginMFAJavaFX(choice,user);
 
-                        MFALogin mfalogin = new MFALogin(strategy);
-                        connected =  mfalogin.twoStepVerif();
-                        if (!connected && strategy != null) {
-                            userInput.showMessage("Two Step Verification failed ") ;
+                        if (!connected) {
                             nbEssai++;
                         }
                     }

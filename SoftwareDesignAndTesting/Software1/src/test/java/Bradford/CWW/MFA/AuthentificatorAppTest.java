@@ -56,7 +56,7 @@ public class AuthentificatorAppTest {
                 }
             };
 
-            AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator,new ZxingPngQrGenerator(),secretGenerator);
+            AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator,new ZxingPngQrGenerator(),secretGenerator,false,null);
             app.setTestMode(true);
 
             app.generateQrCode(secret,"test","/");
@@ -80,7 +80,7 @@ public class AuthentificatorAppTest {
             }
         };
 
-        AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, qrGenerator, new DefaultSecretGenerator());
+        AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, qrGenerator, new DefaultSecretGenerator(),false,null);
 
         assertThrows(IOException.class, () -> {
             app.generateQrCode("BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV","QrCode","");
@@ -107,7 +107,7 @@ public class AuthentificatorAppTest {
                 }
             };
 
-            AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, qrGenerator, new DefaultSecretGenerator());
+            AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, qrGenerator, new DefaultSecretGenerator(),false,null);
             app.setTestMode(true);
             app.generateQrCode(secret,"test","/");
             app.verifyCode(secret,code);
@@ -130,7 +130,7 @@ public class AuthentificatorAppTest {
             }
         };
 
-        AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, qrGenerator, new DefaultSecretGenerator());
+        AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, qrGenerator, new DefaultSecretGenerator(),false,null);
 
         assertThrows(IOException.class, () -> {
             app.generateQrCode("BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV","QrCode","");
@@ -151,7 +151,7 @@ public class AuthentificatorAppTest {
             }
         };
 
-        AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, qrGenerator, new DefaultSecretGenerator());
+        AuthentificatorApp app = new AuthentificatorApp(timeProvider, codeGenerator, qrGenerator, new DefaultSecretGenerator(),false,null);
 
         assertThrows(QrGenerationException.class, () -> {
             app.generateQrCode("BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV","QrCode","");

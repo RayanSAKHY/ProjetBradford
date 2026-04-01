@@ -1,74 +1,79 @@
 package Bradford.CWW.MFA;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.scene.control.Label;
 
-public class GUIQrCode {
-    private final JFrame frame;
-    private final JLabel qrCodeLabel;
+import java.io.File;
+
+public class GUIQrCode{
+    private Stage stage;
+    private final ImageView imageView;
+    private final Label label;
+
+    public GUIQrCode(String filepath,ImageView imageView) {
+        this.imageView = imageView;
+        this.label = new Label("Loading QR Code");
+        loadQrCode(filepath);
+    }
 
     public GUIQrCode(String filepath) {
+        this.imageView = new ImageView();
+        this.label = new Label("Loading QR Code");
 
-        frame = new JFrame("QRCode");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
-        frame.setTitle("QR Code");
+        stage = new Stage();
+        stage.setTitle("QR Code");
 
-        qrCodeLabel = new JLabel("Loading QRCode");
-        frame.setSize(400, 400);
-        frame.add(qrCodeLabel, BorderLayout.CENTER);
-        frame.setLocationRelativeTo(null);
-        qrCodeLabel.setIcon(null);
+        StackPane root = new StackPane(imageView, label);
+        Scene scene = new Scene(root, 400, 400);
+
+        stage.setScene(scene);
+
         loadQrCode(filepath);
-
-
     }
 
     private void loadQrCode(String filepath){
         try {
-
             if (filepath == null || filepath.isEmpty()) {
-                qrCodeLabel.setText("No QR code filepath provided");
+                label.setText("No QR code filepath provided");
                 return;
             }
             File qrCode = new File(filepath);
             if (!qrCode.exists()) {
-                qrCodeLabel.setText("No QR code file exits");
+                label.setText("No QR code file exits");
                 return;
             }
 
+            Image img = new Image(qrCode.toURI().toString());
 
-            BufferedImage img = ImageIO.read(qrCode);
-            ImageIcon qrCodeIcon = new ImageIcon(img);
+            imageView.setImage(img);
+            imageView.setPreserveRatio(true);
+            imageView.setFitWidth(300);
 
-            qrCodeLabel.setIcon(qrCodeIcon);
-            qrCodeLabel.setText(null);
-            frame.setLocationRelativeTo(null);
-            frame.pack();
-            frame.revalidate();
-            frame.repaint();
-        } catch (IOException e) {
-            qrCodeLabel.setText("Error loading QR code");
+            label.setText(null);
+
+        } catch (Exception e) {
+            label.setText("Error loading QR code");
         }
     }
 
-
-    public void printQrCode() {
-        frame.repaint();
-        frame.setVisible(true);
+    public void show() {
+        if (stage != null) {
+            stage.show();
+        }
     }
 
     public void updateQrCode(String filepath) {
         loadQrCode(filepath);
-        frame.revalidate();
-        frame.repaint();
     }
 
     public void end() {
-        frame.dispose();
+        if (stage != null) {
+            stage.close();
+        }
     }
+
 }

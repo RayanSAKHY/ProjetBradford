@@ -12,6 +12,7 @@ import dev.samstevens.totp.secret.SecretGenerator;
 import dev.samstevens.totp.time.SystemTimeProvider;
 import dev.samstevens.totp.time.TimeProvider;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -22,13 +23,20 @@ public class RandomSecretAuthentificatorApp extends AuthentificatorApp implement
         this(new ConsoleInput(new Scanner(System.in)), new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),false);
     }
 
-    public RandomSecretAuthentificatorApp(UserInput userInput,SecretGenerator secretGenerator,TimeProvider timeProvider,CodeGenerator codeGenerator,QrGenerator qrGenerator,boolean testMode) {
+    public RandomSecretAuthentificatorApp(UserInput userInput,SecretGenerator secretGenerator,TimeProvider timeProvider,CodeGenerator codeGenerator,
+                                          QrGenerator qrGenerator,boolean testMode) {
         this.userInput = userInput;
         super.secretGenerator = secretGenerator;
         super.timeProvider = timeProvider;
         super.codeGenerator = codeGenerator;
         super.qrGenerator = qrGenerator;
         super.testMode = testMode;
+
+        String folder = "qrCode";
+        File dir = new File(folder);
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
     }
 
     public RandomSecretAuthentificatorApp(UserInput userInput,boolean testMode) {
@@ -42,7 +50,7 @@ public class RandomSecretAuthentificatorApp extends AuthentificatorApp implement
         String secret = secretGenerator.generate();
 
         try {
-            generateQrCode(secret,"QrCode","src/main/java/Bradford/CWW/MFA/QrCode.png");
+            generateQrCode(secret,"QrCode","qrCode/QrCode.png");
         }
         catch (QrGenerationException | IOException ex) {
             ex.printStackTrace();

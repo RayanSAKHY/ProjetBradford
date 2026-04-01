@@ -11,6 +11,8 @@ import dev.samstevens.totp.secret.DefaultSecretGenerator;
 import dev.samstevens.totp.secret.SecretGenerator;
 import dev.samstevens.totp.time.SystemTimeProvider;
 import dev.samstevens.totp.time.TimeProvider;
+import javafx.application.Application;
+import javafx.application.Platform;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,25 +26,36 @@ public class AuthentificatorApp{
     private GUIQrCode guiQrCode;
     private String Path;
     protected boolean testMode;
+    private boolean guiMode;
 
+    private javafx.scene.image.ImageView guiImageView;
+
+    public AuthentificatorApp(boolean guiMode,javafx.scene.image.ImageView guiImageView) {
+        this(new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),
+                new DefaultSecretGenerator(),guiMode,guiImageView);
+    }
 
     public AuthentificatorApp() {
-        this(new SystemTimeProvider(), new DefaultCodeGenerator(),new ZxingPngQrGenerator(),new DefaultSecretGenerator());
+        this(new SystemTimeProvider(), new DefaultCodeGenerator(),new ZxingPngQrGenerator(),new DefaultSecretGenerator(),false,null);
     }
 
     public void setTestMode(boolean value) {
         this.testMode = value;
     }
 
-    public AuthentificatorApp(TimeProvider timeProvider,CodeGenerator codeGenerator, QrGenerator qrGenerator,SecretGenerator secretGenerator) {
+    public AuthentificatorApp(TimeProvider timeProvider,CodeGenerator codeGenerator, QrGenerator qrGenerator,
+                              SecretGenerator secretGenerator, boolean guiMode, javafx.scene.image.ImageView guiImageView) {
         this.timeProvider = timeProvider;
         this.codeGenerator = codeGenerator;
         this.qrGenerator = qrGenerator;
         this.secretGenerator = secretGenerator;
+
+        this.guiMode = guiMode;
+        this.guiImageView = guiImageView;
     }
 
     public AuthentificatorApp(TimeProvider timeProvider,CodeGenerator codeGenerator) {
-        this(timeProvider,codeGenerator,new ZxingPngQrGenerator(),new DefaultSecretGenerator());
+        this(timeProvider,codeGenerator,new ZxingPngQrGenerator(),new DefaultSecretGenerator(),false,null);
     }
 
     public void generateQrCode(String secret,String label,String path) throws QrGenerationException,IOException,IllegalArgumentException {
@@ -52,14 +65,20 @@ public class AuthentificatorApp{
         byte [] imageData= generateQRCodeData(secret,label);
 
         generateImage(imageData,path);
-        SwingUtilities.invokeLater(() -> {
-            if (guiQrCode == null) {
-                guiQrCode = new GUIQrCode(Path);
-                guiQrCode.printQrCode();
-            } else {
-                guiQrCode.updateQrCode(Path);
-            }
-        });
+
+
+        if (guiMode && guiImageView != null) {
+            Platform.runLater(() -> {
+                if (guiQrCode == null) {
+                    guiQrCode = new GUIQrCode(path, guiImageView);
+                } else {
+                    guiQrCode.updateQrCode(path);
+                }
+            });
+        } else {
+            System.out.println("QrCode generated at: "+path);
+        }
+
     }
 
     private byte[] generateQRCodeData(String secret,String label) throws QrGenerationException {
@@ -110,7 +129,7 @@ public class AuthentificatorApp{
 
     public void end() {
         if (guiQrCode != null && !testMode){
-            SwingUtilities.invokeLater(() -> {
+            Platform.runLater(() -> {
                 this.guiQrCode.end();
             });
         }
