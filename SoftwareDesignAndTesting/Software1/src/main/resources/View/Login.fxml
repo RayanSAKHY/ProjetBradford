@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.layout.HBox?>
+<VBox spacing="10" alignment="TOP_CENTER"
+      xmlns:fx="http://javafx.com/fxml"
+      minHeight="480"  minWidth="600"
+      fx:controller="Bradford.CWW.GUI.Controller">
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Quit" onAction="#closeWindow"/>
+        <Button text="Register" onAction="#register" fx:id="registerBtn"/>
+        <Button text="Login" onAction="#login" fx:id="loginBtn"/>
+    </HBox>
+
+    <Label text="Enter your username"/>
+    <TextField fx:id="nameField"/>
+
+    <Label text="Enter your password"/>
+    <TextField fx:id="passwordField"/>
+
+    <Button text="Validate" fx:id="validateBtn"/>
+    <Label fx:id="resultLabel"/>
+</VBox>
