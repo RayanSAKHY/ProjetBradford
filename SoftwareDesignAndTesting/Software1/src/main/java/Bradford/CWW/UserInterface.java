@@ -2,6 +2,7 @@ package Bradford.CWW;
 
 import Bradford.CWW.Input.ConsoleInput;
 import Bradford.CWW.Input.UserInput;
+import Bradford.CWW.assets.UserData;
 import Bradford.CWW.assets.UserDataSingleton;
 
 import java.io.InputStream;
@@ -11,7 +12,7 @@ public class UserInterface {
     public UserInput userInput;
     public boolean testMode;
     public InputStream input;
-    private UserDataSingleton users = new UserDataSingleton();
+    private final UserData users = UserDataSingleton.getInstance();
 
     public UserInterface(InputStream input,boolean testMode) {
         this.userInput = new ConsoleInput(new Scanner(input));
@@ -32,7 +33,7 @@ public class UserInterface {
                     userInput.showMessage("Each username must be unique or the last user with identical username will be deleted");
                     String name = userInput.askInput("Enter user's name: ");
                     String password = userInput.askInput("Enter user's password: ");
-                    users.getInstance().addUser(name,password);
+                    users.addUser(name,password);
                     input = userInput.askInput("Do you still want to create more users (Y or N) ? ");
                     if (input.equals("N")) {
                         run = false;
@@ -50,7 +51,7 @@ public class UserInterface {
                 break;
         }
         run = true;
-        Login login = new Login(userInput,testMode,users);
+        Login login = new Login(userInput,testMode);
         while(run){
             input = userInput.askInput("Do you want to try connecting with your own users (type 1), using the demonstration users (type 2) or qui the application (type 3) ? ");
             switch (input) {
