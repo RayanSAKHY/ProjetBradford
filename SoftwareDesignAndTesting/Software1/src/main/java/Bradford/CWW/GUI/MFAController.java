@@ -1,16 +1,29 @@
 package Bradford.CWW.GUI;
 
+import Bradford.CWW.Input.JavaFXInput;
+import Bradford.CWW.Input.UserInput;
+import Bradford.CWW.Login;
+import Bradford.CWW.assets.User;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
+
+import java.util.Objects;
+import java.util.function.Consumer;
 
 public class MFAController {
+    private User user;
+
     @FXML
     private TextArea console;
 
+    @FXML
+    private Button validate;
     @FXML
     private Label info;
 
@@ -19,17 +32,23 @@ public class MFAController {
 
     @FXML
     private ImageView imageView;
-//
-//    @FXML
-//    public void initialize() {
-//        Image image = new Image(getClass().getResource("/../java/Bradford/CWW/").toExternalForm());
-//        imageView.setImage(image);
-//    }
+
+    @FXML
+    public void initialize() {
+        Image image = new Image(Objects.requireNonNull(getClass().getResource("/fondBlanc.png")).toExternalForm());
+        imageView.setImage(image);
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 
     @FXML
     private void verifyMFA(javafx.event.ActionEvent event) {
         javafx.scene.control.Button mfaBtn = (javafx.scene.control.Button) event.getSource();
         int choice = 0;
+
 
         switch (mfaBtn.getId()) {
             case "mfaBtn1":
@@ -51,6 +70,23 @@ public class MFAController {
                 break;
         }
 
+        //info.setText("choice: " + choice);
+        UserInput userInput = new JavaFXInput(console,codeField,validate);
+        Login login = new Login(userInput,false);
 
+        //info.setText("result : " +login.loginJavaFX(user.getUsername(), user.getPassword()));
+        login.loginMFAJavaFX(choice,user,new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean result) {
+                if (result) {
+                    info.setText("MFA successfully verified!");
+                }
+                else {
+                    info.setText("MFA failed!");
+                }
+            }
+        }, imageView);
+
+        initialize();
     }
 }
