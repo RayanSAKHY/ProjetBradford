@@ -15,21 +15,19 @@ import dev.samstevens.totp.time.TimeProvider;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 public class RandomSecretAuthentificatorApp extends AuthentificatorApp implements IMFAStrategy {
     private final UserInput userInput;
 
     public RandomSecretAuthentificatorApp() {
-        this(new ConsoleInput(new Scanner(System.in)), new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),false);
+        this(new ConsoleInput(new Scanner(System.in)), new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),false,null,false);
     }
 
     public RandomSecretAuthentificatorApp(UserInput userInput,SecretGenerator secretGenerator,TimeProvider timeProvider,CodeGenerator codeGenerator,
-                                          QrGenerator qrGenerator,boolean testMode) {
+                                          QrGenerator qrGenerator, boolean guiMode, javafx.scene.image.ImageView imageView, boolean testMode) {
+        super(timeProvider, codeGenerator, qrGenerator, secretGenerator, guiMode, imageView);
         this.userInput = userInput;
-        super.secretGenerator = secretGenerator;
-        super.timeProvider = timeProvider;
-        super.codeGenerator = codeGenerator;
-        super.qrGenerator = qrGenerator;
         super.testMode = testMode;
 
         String folder = "qrCode";
@@ -39,11 +37,43 @@ public class RandomSecretAuthentificatorApp extends AuthentificatorApp implement
         }
     }
 
-    public RandomSecretAuthentificatorApp(UserInput userInput,boolean testMode) {
-        this(userInput, new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),testMode);
+    public RandomSecretAuthentificatorApp(UserInput userInput, SecretGenerator secretGenerator, TimeProvider timeProvider,CodeGenerator codeGenerator,ZxingPngQrGenerator qrCodeGenerator,Boolean testMode) {
+        this(userInput,secretGenerator,timeProvider,codeGenerator,qrCodeGenerator,false,null,testMode);
+    }
+    public RandomSecretAuthentificatorApp(UserInput userInput,Boolean guiMode,javafx.scene.image.ImageView imageView ,boolean testMode) {
+        this(userInput, new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),guiMode,imageView,testMode);
+    }
+
+    public RandomSecretAuthentificatorApp(UserInput userInput,Boolean testMode) {
+        this(userInput,new DefaultSecretGenerator(),new SystemTimeProvider(),new DefaultCodeGenerator(),new ZxingPngQrGenerator(),false,null,testMode);
     }
 
 
+    @Override
+    public void TwoStepVerifAsync(Consumer<String> queue) {
+        String secret = secretGenerator.generate();
+
+        try {
+            generateQrCode(secret,"QrCode","qrCode/QrCode.png");
+        }
+        catch (QrGenerationException | IOException ex) {
+            ex.printStackTrace();
+            queue.accept(null);
+        }
+
+        userInput.askInputAsync("Use the QR Code in your authenticatir app ansd type the code you obtain", code -> {
+            if (verifyCode(secret,code)) {
+                userInput.showMessage("Verification successful");
+                this.end(); // Close QR code after verification
+                queue.accept("success");
+            }
+            else {
+                userInput.showMessage("Verification failed");
+                this.end(); // Close QR code after verification
+                queue.accept("failed");
+            }
+        });
+    }
     @Override
     public boolean TwoStepVerif() {
 
