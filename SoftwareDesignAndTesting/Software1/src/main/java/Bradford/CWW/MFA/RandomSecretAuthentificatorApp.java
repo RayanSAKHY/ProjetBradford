@@ -63,13 +63,9 @@ public class RandomSecretAuthentificatorApp extends AuthentificatorApp implement
 
         userInput.askInputAsync("Use the QR Code in your authenticatir app ansd type the code you obtain", code -> {
             if (verifyCode(secret,code)) {
-                userInput.showMessage("Verification successful");
-                this.end(); // Close QR code after verification
                 queue.accept("success");
             }
             else {
-                userInput.showMessage("Verification failed");
-                this.end(); // Close QR code after verification
                 queue.accept("failed");
             }
         });
