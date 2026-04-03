@@ -3,6 +3,7 @@ package Bradford.CWW;
 import Bradford.CWW.MFA.*;
 
 import javax.swing.*;
+import java.util.function.Consumer;
 
 public class MFALogin {
     private IMFAStrategy strategy;
@@ -18,6 +19,14 @@ public class MFALogin {
             result = strategy.TwoStepVerif();
         }
         return result;
+    }
+
+    public void twoStepVerifAsync(Consumer<Boolean> queue) {
+        if (strategy != null) {
+            strategy.TwoStepVerifAsync(result -> {
+                queue.accept("success".equals(result));
+            });
+        }
     }
 
 }
