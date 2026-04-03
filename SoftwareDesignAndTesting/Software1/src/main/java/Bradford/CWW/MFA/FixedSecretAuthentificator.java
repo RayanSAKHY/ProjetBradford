@@ -14,7 +14,6 @@ import dev.samstevens.totp.time.TimeProvider;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
 import java.util.function.Consumer;
 
 public class FixedSecretAuthentificator extends AuthentificatorApp implements IMFAStrategy{
@@ -98,19 +97,16 @@ public class FixedSecretAuthentificator extends AuthentificatorApp implements IM
         if (user == null) {
             userInput.showMessage("User is null");
             queue.accept(null);
-            return;
         }
 
         if (!user.getSecret().isEmpty()) {
-            userInput.askInputAsync("Do you want to use the saved secret (Y or N) ?", input -> {
+            userInput.askInputAsync("Do you want to use the saved secret (Y or N) ?",input -> {
                 switch (input) {
                     case "Y":
-                        askForCodeAsync(queue);
                         break;
                     case "N":
                         try {
                             assignSecret(user,"qrCode/users/QrCode"+user.getUsername()+".png","QrCode" + user.getUsername());
-                            askForCodeAsync(queue);
                         }
                         catch (QrGenerationException | IOException ex) {
                             ex.printStackTrace();
@@ -118,40 +114,33 @@ public class FixedSecretAuthentificator extends AuthentificatorApp implements IM
                         }
                         break;
                     default:
-                        askForCodeAsync(queue);
+                        userInput.showMessage("Invalid input");
                         break;
                 }
+
             });
         }
         else {
             try {
                 assignSecret(user,"qrCode/users/QrCode"+user.getUsername()+".png","QrCode" + user.getUsername());
-                askForCodeAsync(queue);
             }
             catch (QrGenerationException | IOException ex) {
                 ex.printStackTrace();
                 queue.accept(null);
             }
         }
-    }
 
-    private void askForCodeAsync(Consumer<String> queue) {
-        userInput.askInputAsync("Please enter the secret code on your authentication app", code -> {
+        userInput.askInputAsync("Please enter the secret code on your authentication app",code ->{
             if (verifyCode(user.getSecret(), code)) {
                 userInput.showMessage("Verification succesful");
-                closeQrCode();
                 queue.accept("success");
             }
             else {
                 userInput.showMessage("Verification failed");
-                closeQrCode();
                 queue.accept("failed");
             }
         });
-    }
 
-    private void closeQrCode() {
-        this.end();
     }
     private void assignSecret(User user,String path,String label) throws IOException,QrGenerationException {
         String secret = secretGenerator.generate();
