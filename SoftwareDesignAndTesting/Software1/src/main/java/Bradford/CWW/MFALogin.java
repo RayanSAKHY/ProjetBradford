@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.util.function.Consumer;
 
 public class MFALogin {
-    private IMFAStrategy strategy;
+    private final IMFAStrategy strategy;
 
     public MFALogin(IMFAStrategy strategy) {
         this.strategy = strategy;
@@ -23,9 +23,9 @@ public class MFALogin {
 
     public void twoStepVerifAsync(Consumer<Boolean> queue) {
         if (strategy != null) {
-            strategy.TwoStepVerifAsync(result -> {
-                queue.accept("success".equals(result));
-            });
+            strategy.TwoStepVerifAsync(result ->
+                queue.accept("success".equals(result))
+            );
         }
     }
 
