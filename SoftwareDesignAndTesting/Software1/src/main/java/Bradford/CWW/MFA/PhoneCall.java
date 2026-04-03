@@ -2,7 +2,6 @@ package Bradford.CWW.MFA;
 
 import Bradford.CWW.Input.UserInput;
 
-import java.util.Scanner;
 import java.util.function.Consumer;
 
 public class PhoneCall implements IMFAStrategy {

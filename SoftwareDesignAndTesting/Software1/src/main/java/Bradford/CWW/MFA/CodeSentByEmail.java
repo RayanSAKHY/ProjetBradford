@@ -2,7 +2,6 @@ package Bradford.CWW.MFA;
 
 import Bradford.CWW.Input.UserInput;
 
-import java.util.Scanner;
 import java.util.function.Consumer;
 //Source : https://stackoverflow.com/questions/884943/how-do-i-send-an-e-mail-in-java
 
