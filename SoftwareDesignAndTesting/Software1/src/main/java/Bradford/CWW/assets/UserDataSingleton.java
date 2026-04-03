@@ -1,9 +1,12 @@
 package Bradford.CWW.assets;
 
 public class UserDataSingleton {
-    private UserData userData;
+    private static UserData userData;
 
-    public UserData getInstance() {
+    private UserDataSingleton() {
+
+    }
+    public static UserData getInstance() {
         if (userData == null) {
             userData = new UserData();
         }
