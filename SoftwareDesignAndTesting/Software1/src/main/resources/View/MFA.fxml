@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.image.ImageView?>
+<VBox spacing="10" alignment="TOP_CENTER"
+      xmlns:fx="http://javafx.com/fxml"
+      minHeight="480" minWidth="600"
+      fx:controller="Bradford.CWW.GUI.MFAController">
+
+    <Label text="Choose your MFA method"/>
+    <GridPane alignment="CENTER">
+        <Button fx:id="mfaBtn1" text="Receive a phone call" GridPane.rowIndex="0" GridPane.columnIndex="0" onAction="#verifyMFA"/>
+        <Button fx:id="mfaBtn2" text="Receive a code by email" GridPane.rowIndex="1" GridPane.columnIndex="0" onAction="#verifyMFA"/>
+        <Button fx:id="mfaBtn3" text="Receive a code by SMS" GridPane.rowIndex="0" GridPane.columnIndex="1" onAction="#verifyMFA"/>
+        <Button fx:id="mfaBtn4" text="Scan a QR Code" GridPane.rowIndex="1" GridPane.columnIndex="1" onAction="#verifyMFA"/>
+        <Button fx:id="mfaBtn5" text="Check your authenticator app" GridPane.rowIndex="2" GridPane.columnIndex="0" onAction="#verifyMFA"/>
+    </GridPane>
+
+    <Label fx:id="info"/>
+
+    <HBox alignment="CENTER">
+        <TextField fx:id="codeField"/>
+        <Button text="Validate" fx:id="validate"/>
+    </HBox>
+
+
+    <HBox alignment="CENTER">
+        <ImageView fx:id="imageView" fitWidth="300" fitHeight="300"/>
+        <TextArea fx:id="console"/>
+    </HBox>
+
+
+</VBox>
