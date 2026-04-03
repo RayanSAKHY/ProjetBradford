@@ -16,7 +16,7 @@ public class Controller {
     public Button loginBtn;
     public Button registerBtn;
     private int nbEssai = 0;
-    private UserData users;
+    private final UserData users;
 
     public Controller() {
         users = UserDataSingleton.getInstance();
