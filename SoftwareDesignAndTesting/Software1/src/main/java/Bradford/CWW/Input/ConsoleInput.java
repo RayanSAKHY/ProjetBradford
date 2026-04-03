@@ -1,6 +1,7 @@
 package Bradford.CWW.Input;
 
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 public class ConsoleInput implements UserInput {
     private Scanner scanner;
@@ -12,7 +13,12 @@ public class ConsoleInput implements UserInput {
     @Override
     public String askInput(String message) {
         System.out.println(message);
-        return scanner.nextLine();
+        String reponse = scanner.nextLine();
+        return reponse;
+    }
+
+    @Override
+    public void askInputAsync(String message, Consumer<String> queue) {
     }
 
     @Override
