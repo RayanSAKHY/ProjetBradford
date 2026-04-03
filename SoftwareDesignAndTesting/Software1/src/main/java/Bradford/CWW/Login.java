@@ -8,33 +8,28 @@ import Bradford.CWW.assets.UserDataSingleton;
 
 import java.lang.StringBuilder;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 public class Login {
-    private final UserDataSingleton users;
+    private final UserData users;
     private final UserInput userInput;
     private final boolean testMode;
 
 
-    public Login(UserInput userInput,boolean testMode,UserDataSingleton users) {
+    public Login(UserInput userInput,boolean testMode) {
         this.userInput = userInput;
         this.testMode = testMode;
-        this.users = users;
+        this.users = UserDataSingleton.getInstance();
     }
 
-    public Login(UserInput userInput, boolean testMode) {
-        this(userInput,testMode,new UserDataSingleton());
-    }
     public Login(boolean testMode) {
         this(new ConsoleInput(new Scanner(System.in)),testMode);
     }
 
-    public Login(boolean testMode, UserDataSingleton users) {
-        this(new ConsoleInput(new Scanner(System.in)),testMode,users);
-    }
 
     public boolean loginJavaFX(String username, String password) {
-        if (users.getInstance().usernameExists(username)) {
-            User user = users.getInstance().getUser(username);
+        if (users.usernameExists(username)) {
+            User user = users.getUser(username);
             return user.getPassword().equals(password);
         }
         else {
@@ -42,7 +37,7 @@ public class Login {
         }
     }
 
-    public boolean loginMFAJavaFX(int choice,User user) {
+    public boolean loginMFAConsole(int choice, User user) {
         IMFAStrategy strategy = null;
         switch (choice) {
             case 1:
@@ -64,13 +59,51 @@ public class Login {
                 break;
         }
 
-        MFALogin mfalogin = new MFALogin(strategy);
-        boolean connected = mfalogin.twoStepVerif();
-        if (!connected && strategy != null) {
-            userInput.showMessage("Two Step Verification failed ") ;
-            return false;
+        if (strategy != null) {
+            return strategy.TwoStepVerif();
         }
-        return true;
+        return false;
+    }
+
+    public void loginMFAJavaFX(int choice, User user, Consumer<Boolean> queue, javafx.scene.image.ImageView imageView) {
+        IMFAStrategy strategy = null;
+        switch (choice) {
+            case 1:
+                strategy = new PhoneCall(userInput);
+                break;
+            case 2:
+                strategy = new CodeSentByEmail(userInput);
+                break;
+            case 3:
+                strategy = new CodeSentBySMS(userInput);
+                break;
+            case 4:
+                strategy = new RandomSecretAuthentificatorApp(userInput,true,imageView,testMode);
+                break;
+            case 5:
+                strategy = new FixedSecretAuthentificator(userInput,user,true,imageView,testMode);
+                break;
+            default:
+                break;
+        }
+
+        MFALogin mfalogin = new MFALogin(strategy);
+        IMFAStrategy finalStrategy = strategy;
+        mfalogin.twoStepVerifAsync(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean success) {
+                if (success) {
+                    queue.accept(true);
+                }
+                else {
+                    if (finalStrategy != null) {
+                        userInput.showMessage("Two Step Verification failed ") ;
+                        queue.accept(false);
+                    }
+                }
+            }
+        });
+
     }
 
     public boolean loginConsole(String username, String password) {
@@ -78,13 +111,13 @@ public class Login {
         int nbEssai = 0;
         while (nbEssai < 3 && !connected) {
             userInput.showMessage(credentialsPrint(username, password)) ;
-            if (users.getInstance().usernameExists(username)){
-                User user = users.getInstance().getUser(username);
+            if (users.usernameExists(username)){
+                User user = users.getUser(username);
                 if (user.getPassword().equals(password)) {
                     String input = MFAChoice();
                     try {
                         int choice = Integer.parseInt(input);
-                        connected =  loginMFAJavaFX(choice,user);
+                        connected = loginMFAConsole(choice, user);
 
                         if (!connected) {
                             nbEssai++;
