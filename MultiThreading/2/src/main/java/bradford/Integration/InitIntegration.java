@@ -5,28 +5,41 @@ import java.util.List;
 import java.util.Scanner;
 
 public class InitIntegration {
-    private List<Double> fonc = new ArrayList<>();
-    private int subDivision;
-    private double[] range = new double[2];
     private Scanner scanner = new Scanner(System.in);
 
     public List<Double> initFonc() {
+        List<Double> fonc = new ArrayList<>();
         System.out.println("THE FUNCTION:");
 
         System.out.println("Choose the value of each coefficient starting from the unit one and type end to finish your function:");
         String input = scanner.nextLine();
         double coef = 0.0;
+        int power = 0;
         while (!input.equals("end")) {
             try {
                 coef = Double.parseDouble(input);
 
                 fonc.add(coef);
-
+                power++;
+                if (power > 0) {
+                    System.out.print("x");
+                    if (power > 1) {
+                        System.out.print("^"+power);
+                    }
+                    System.out.print(":");
+                }
                 input = scanner.nextLine();
             }
             catch (NumberFormatException e) {
                 if (!input.equals("end")) {
                     System.out.println("Invalid input. Please try again.");
+                    if (power > 0) {
+                        System.out.print("x");
+                        if (power > 1) {
+                            System.out.print("^"+power);
+                        }
+                        System.out.print(":");
+                    }
                     input = scanner.nextLine();
                 }
             }
@@ -34,7 +47,8 @@ public class InitIntegration {
         return fonc;
     }
 
-    public double[] initRange() {
+    public List<Double> initRange() {
+        List<Double> range = new ArrayList<>(2);
         System.out.println("THE RANGE:");
         System.out.println("Choose the range of the function:");
         String input;
@@ -46,7 +60,7 @@ public class InitIntegration {
             input = scanner.nextLine();
             try {
 
-                range[n] = Double.parseDouble(input);
+                range.add(Double.parseDouble(input));
                 n++;
             }
             catch (NumberFormatException e) {
@@ -57,6 +71,7 @@ public class InitIntegration {
     }
 
     public int initSubDivision() {
+        int subDivision=0;
         System.out.println("THE SUBDIVISION:");
         System.out.println("Choose the number of sub division that will be used in this integration:");
 
@@ -82,7 +97,9 @@ public class InitIntegration {
 
         for (double coef : func) {
             if (power == 0) {
-                function.append(coef);
+                if (coef != 0) {
+                    function.append(coef);
+                }
             }
             else {
                 if (coef !=0) {
@@ -93,7 +110,12 @@ public class InitIntegration {
                         function.append(" ");
                     }
 
-                    function.append(coef).append("*x");
+                    if (coef != 1) {
+                        function.append(coef).append("*x");
+                    }
+                    else {
+                        function.append("x");
+                    }
                     if (power != 1) {
                         function.append("^").append(power);
                     }
