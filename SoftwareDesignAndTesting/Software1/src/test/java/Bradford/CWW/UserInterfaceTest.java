@@ -1,7 +1,11 @@
 package Bradford.CWW;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import Bradford.CWW.assets.UserData;
+import Bradford.CWW.assets.UserDataSingleton;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -9,6 +13,11 @@ import java.io.InputStream;
 
 
 public class UserInterfaceTest {
+
+    @BeforeEach
+    public void setUp() {
+        UserDataSingleton.resetInstance();
+    }
 
     @Test
     public void testInvalidInput() {
@@ -59,9 +68,12 @@ public class UserInterfaceTest {
 
     @Test
     public void testCreateAndUse() {
-        InputStream input = new ByteArrayInputStream("Y\nghf\nfds\nN\n1\n1\nghf\nfds\n".getBytes());
+        InputStream input = new ByteArrayInputStream("Y\nghf\nfds\nN\n1\n1\nghf\nfds\n3\n".getBytes());
         UserInterface app = new UserInterface(input,true);
         app.UseApp();
+
+        UserData users = UserDataSingleton.getInstance();
+        assertTrue(users.usernameExists("ghf"));
     }
 
 }
