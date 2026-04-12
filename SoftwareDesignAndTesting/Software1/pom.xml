@@ -11,7 +11,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.release>21</maven.compiler.release>
+    <maven.compiler.release>17</maven.compiler.release>
   </properties>
 
   <dependencyManagement>
@@ -30,13 +30,13 @@
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>23</version>
+      <version>20.0.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
-      <version>23</version>
+      <version>20.0.1</version>
     </dependency>
 
     <dependency>
@@ -58,6 +58,12 @@
       <version>5.11.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.11.0</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -65,6 +71,11 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.12.1</version>
+        <configuration>
+          <source>17</source>
+          <target>17</target>
+          <release>17</release>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -89,9 +100,61 @@
             <goals>
               <goal>report</goal>
             </goals>
+
+            <configuration>
+              <excludes>
+                <exclude>Bradford/CWW/App*</exclude>
+                <exclude>Bradford/CWW/GUI/*</exclude>
+                <exclude>Bradford/CWW/Input/JavaFXInput</exclude>
+                <exclude>Bradford/CWW/MFA/AuthentificatorApp</exclude>
+                <exclude>Bradford/CWW/MFA/GUIQrCode</exclude>
+                <exclude>Bradford/CWW/MFALogin</exclude>
+              </excludes>
+            </configuration>
           </execution>
         </executions>
       </plugin>
+
+      <!--PITest plugin-->
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>1.15.0</version>
+        <!-- Need this to support JUnit 5 -->
+
+        <dependencies>
+          <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-junit5-plugin</artifactId>
+            <version>1.2.0</version>
+          </dependency>
+        </dependencies>
+
+        <configuration>
+          <excludedClasses>
+            <param>Bradford.CWW.App</param>
+            <param>Bradford.CWW.GUI.*</param>
+            <param>Bradford.CWW.MFALogin</param>
+            <param>Bradford.CWW.Input.JavaFXInput</param>
+            <param>Bradford.CWW.MFA.GUIQrCode</param>
+            <param>Bradford.CWW.MFA.AuthentificatorApp</param>
+          </excludedClasses>
+
+          <targetClasses>
+            <param>Bradford.CWW.*</param>
+            <param>Bradford.CWW.MFA.*</param>
+            <param>Bradford.CWW.Input.*</param>
+            <param>Bradford.CWW.assets.*</param>
+          </targetClasses>
+          <targetTests>
+            <param>Bradford.CWW.*</param>
+            <param>Bradford.CWW.MFA.*</param>
+          </targetTests>
+
+        </configuration>
+
+      </plugin>
+
     </plugins>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
@@ -153,38 +216,7 @@
           </configuration>
         </plugin>
 
-        <!--PITest plugin-->
-        <plugin>
-          <groupId>org.pitest</groupId>
-          <artifactId>pitest-maven</artifactId>
-          <version>1.15.0</version>
-          <executions>
-            <execution>
-              <id>pit-report</id>
-              <!-- optional, this example attached the goal into mvn test phase -->
-              <phase>test</phase>
-              <goals>
-                <goal>mutationCoverage</goal>
-              </goals>
-            </execution>
-          </executions>
-          <!-- Need this to support JUnit 5 -->
-          <dependencies>
-            <dependency>
-              <groupId>org.pitest</groupId>
-              <artifactId>pitest-junit5-plugin</artifactId>
-              <version>1.2.1</version>
-            </dependency>
-          </dependencies>
-          <configuration>
-            <targetClasses>
-              <param>Software1.*</param>
-            </targetClasses>
-            <targetTests>
-              <param>Software1.*</param>
-            </targetTests>
-          </configuration>
-        </plugin>
+
       </plugins>
     </pluginManagement>
   </build>
