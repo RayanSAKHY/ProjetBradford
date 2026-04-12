@@ -24,6 +24,6 @@ public class IntegrationResult {
     }
 
     public String toString() {
-        return "Method: "+name + "\nValue: "+value+"\nDuration: "+duration;
+        return "Method: "+name + "\nValue: "+value+"\nDuration: "+duration+" ns";
     }
 }
