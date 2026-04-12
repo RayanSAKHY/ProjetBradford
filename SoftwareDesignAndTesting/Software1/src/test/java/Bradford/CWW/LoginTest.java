@@ -170,4 +170,25 @@ public class LoginTest {
         assertNotNull(userInput);
     }
 
+    @Test
+    public void testLoginJavaFXShouldReturnTrue() {
+        Login login = new Login(true);
+
+        assertTrue(login.loginJavaFX("test","azerty"));
+    }
+
+    @Test
+    public void testLoginJavaFXShouldReturnFalse() {
+        Login login = new Login(true);
+
+        assertFalse(login.loginJavaFX("test1","azerty"));
+    }
+
+    @Test
+    public void testLoginJavaFXShouldReturnFalse2() {
+        Login login = new Login(true);
+
+        assertFalse(login.loginJavaFX("test","azertyfsd"));
+    }
+
 }
