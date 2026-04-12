@@ -1,7 +1,6 @@
 package bradford.Vote;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
@@ -9,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 
 public class CentralVotingServer {
-    private static Map<String,Map<String,Integer>> finalVote = new ConcurrentHashMap<>();
+    private final static Map<String,Map<String,Integer>> finalVote = new ConcurrentHashMap<>();
     private static boolean running = true;
 
     /**
