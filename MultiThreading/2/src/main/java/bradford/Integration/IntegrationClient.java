@@ -91,7 +91,7 @@ public class IntegrationClient {
                 out.println(result);
                 out.println(duration.toNanos());
 
-                System.out.println(integrationMethod+":\nResult: "+result+"\nTime: "+duration.toNanos());
+                System.out.println(integrationMethod+":\nResult: "+result+"\nTime: "+duration.toNanos()+" ns");
 
 
             } catch (Exception e) {
