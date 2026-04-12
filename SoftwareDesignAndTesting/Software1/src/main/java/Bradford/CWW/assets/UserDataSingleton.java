@@ -13,4 +13,7 @@ public class UserDataSingleton {
         return userData;
     }
 
+    public static void resetInstance() {
+        userData = null;
+    }
 }
