@@ -21,6 +21,6 @@
     <Label text="Enter your password"/>
     <TextField fx:id="passwordField"/>
 
-    <Button text="Validate" fx:id="validateBtn"/>
+    <Button text="Validate" fx:id="validateBtn" disable="true"/>
     <Label fx:id="resultLabel"/>
 </VBox>
