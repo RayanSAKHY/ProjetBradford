@@ -31,6 +31,7 @@ public class Controller {
     @FXML
     private TextField passwordField;
 
+
     @FXML
     private void handleLogin() {
         Login login = new Login(false);
@@ -78,6 +79,7 @@ public class Controller {
         resultLabel.setText("");
         registerBtn.setDisable(true);
         loginBtn.setDisable(false);
+        validateBtn.setDisable(false);
         validateBtn.setOnAction(e -> addUser());
         nbEssai = 0;
     }
@@ -96,6 +98,7 @@ public class Controller {
         resultLabel.setText("");
         registerBtn.setDisable(false);
         loginBtn.setDisable(true);
+        validateBtn.setDisable(false);
         validateBtn.setOnAction(e -> handleLogin());
     }
 
