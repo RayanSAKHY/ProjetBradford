@@ -18,6 +18,10 @@ public class LoadBalancingServer {
         try {
             listener = new ServerSocket(59898);
             System.out.println("The load balancing server is running...");
+            System.out.println("Command: ");
+            System.out.println("- Type a number to calculate Fibonacci of this value");
+            System.out.println("- Type a message to maybe obtain a secret response");
+            System.out.println("- Type \"end\" to stop the load balancing");
 
 
             logger = new Logger("log.txt");
