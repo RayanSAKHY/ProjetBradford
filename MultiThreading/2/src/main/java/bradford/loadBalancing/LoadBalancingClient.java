@@ -43,6 +43,7 @@ public class LoadBalancingClient {
 
                    if  (line.equals("end")) {
                        out.println("LOG:"+clientId+"-Server closing");
+                       System.out.println("Simulation finishing");
                        running = false;
                        try {
                            socket.close();
@@ -51,7 +52,7 @@ public class LoadBalancingClient {
                        } catch (IOException e) {
                            throw new RuntimeException(e);
                        }
-                       System.out.println("Simulation finishing");
+
                        break;
                    }
                    String response;
