@@ -14,7 +14,7 @@ public class LoadBalancer {
     private static boolean running = true;
     private static final Map<PrintWriter,Integer> servers = new ConcurrentHashMap<>();
     private static final Map<String,PrintWriter> requestToClient = new ConcurrentHashMap<>();
-    private static final Map<PrintWriter,Scanner> clients = new ConcurrentHashMap<>();
+    private static final List<PrintWriter> clients = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
         try {
@@ -79,7 +79,7 @@ public class LoadBalancer {
                 }
                 else if (type.equals("CLIENT")) {
                     synchronized (clients) {
-                        clients.put(out,in);
+                        clients.add(out);
                     }
                 }
 
@@ -136,7 +136,7 @@ public class LoadBalancer {
                                     out.println("end");
                                 }
 
-                                for (PrintWriter out : clients.keySet()) {
+                                for (PrintWriter out : clients) {
                                     out.println("end");
                                 }
 
