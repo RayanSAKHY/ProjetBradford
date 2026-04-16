@@ -1,157 +1,94 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package bradford.loadBalancing;
 
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
+import java.util.Scanner;
 
 public class LoadBalancingServer {
-    private static ServerSocket listener;
-    private static Logger logger;
     private static boolean running = true;
-    private static final Map<PrintWriter,Integer> clients = new ConcurrentHashMap<>();
+    private static int nbTask=0;
 
     public static void main(String[] args) throws Exception {
-        try {
-            listener = new ServerSocket(59898);
-            System.out.println("The load balancing server is running...");
-            System.out.println("Command: ");
-            System.out.println("- Type a number to calculate Fibonacci of this value");
-            System.out.println("- Type a message to maybe obtain a secret response");
-            System.out.println("- Type \"end\" to stop the load balancing");
-
-
-            logger = new Logger("log.txt");
-            var pool = Executors.newFixedThreadPool(25);
-            pool.execute(new Updater());
-            pool.execute(new OrderSender());
-
-            try {
-                while (running) {
-                    pool.execute(new Listener(listener.accept()));
-                }
-            } catch (IOException e) {
-                if (running) {
-                    e.printStackTrace();
-                }
-            }
+        if (args.length != 1) {
+            System.err.println("Pass the server IP as the sole command line argument");
+            return;
         }
-        finally {
-            logger.close();
-        }
-    }
-
-    private static class Updater implements Runnable {
-
-        @Override
-        public void run() {
-            while (running) {
-                try {
-                    for (PrintWriter out : clients.keySet()) {
-                        out.println("upd");
-                    }
-                    Thread.sleep(500);
-                }
-                catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-         }
-    }
-
-    private static class OrderSender implements Runnable {
-        private Scanner in = new Scanner(System.in);
-
-        @Override
-        public void run() {
-            while (running && in.hasNextLine()) {
-                String line = in.nextLine();
-                if (line.equals("end")) {
-                    running = false;
-                    for (PrintWriter out : clients.keySet()) {
-                        out.println("end");
-                    }
-
-                    try {
-                        listener.close();
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                }
-
-                Map.Entry<PrintWriter, Integer> bestClient;
-                synchronized (clients) {
-                    bestClient = null;
-                    for (Map.Entry<PrintWriter, Integer> client : clients.entrySet()) {
-                        if (bestClient == null || client.getValue() < bestClient.getValue()) {
-                            bestClient = client;
-                        }
-                    }
-                }
-
-                if (bestClient != null) {
-                    bestClient.getKey().println(line);
-                }
-
-            }
-        }
-    }
-
-    private static class Listener implements Runnable {
-        private PrintWriter out;
-        private Scanner in;
-
-        Listener(Socket socket) {
-            try {
-                out = new PrintWriter(socket.getOutputStream(),true);
-                in = new Scanner(socket.getInputStream());
-
-                synchronized (clients) {
-                    clients.put(out,0);
-                }
-
-            }
-            catch (IOException e) {
-                System.err.println("Could not open connection to socket");
-            }
-
-        }
-
-        @Override
-        public void run() {
+        try (var socket = new Socket(args[0], 59898)) {
+            var in = new Scanner(socket.getInputStream());
+            var out = new PrintWriter(socket.getOutputStream(), true);
             while (running) {
                 if (in.hasNextLine()) {
+
                     String line = in.nextLine();
-                    String[] parts = line.split(":");
-                    switch (parts[0]) {
-                        case "UPD":
-                            int nbTask = Integer.parseInt(parts[1]);
-                            synchronized (clients) {
-                                clients.replace(out, nbTask);
+                    if (line.equals("end")) {
+                        running = false;
+                        out.println("LOG:"+socket+"-Server closed");
+                        System.out.println("Server stopped");
+                        break;
+                    }
+                    else if (line.equals("upd")) {
+                        out.println("UPD:"+nbTask);
+                    }
+                    else {
+                        nbTask++;
+                        try {
+                            long repet = Long.parseLong(line);
+
+                            System.out.println("Starting the calculi of fibonacci for "+repet);
+                            out.println("LOG:"+socket+"-Calculing fibonacci("+repet+")");
+                            long result = fibonnaci(repet);
+
+                            out.println("LOG:"+socket+"-fibonacci("+repet+") = "+result);
+                            System.out.println("Fibonacci("+repet+") = "+result);
+                            out.println("RES:"+result);
+                        }
+                        catch (NumberFormatException e) {
+                            System.out.println("Message received = "+line);
+                            out.println("LOG:"+socket+"-Message received = "+line);
+                            String response ="";
+                            switch (line) {
+                                case "I lost":
+                                    response = "I lost the game";
+                                    break;
+                                case "Hello":
+                                    response = "how can I helpp you";
+                                    break;
+                                case "How are you":
+                                    response = "fine I finished it after several hour";
+                                    break;
+                                default:
+                                    response = line;
+                                    break;
                             }
-                            break;
-                        case "RES":
-                            long res = Long.parseLong(parts[1]);
-                            System.out.println("Result for fibonacci: "+res);
-                            break;
-                        case "LOG":
-                            String[] info = parts[1].split("-");
-                            logger.log(info[0],info[1]);
-                            break;
-                        case "MES":
-                            System.out.println(parts[1]);
-                            break;
-                        default:
-                            System.out.println("Unknown command");
-                            break;
+
+                            out.println("LOG:"+socket+"-Response = "+response);
+                            out.println("MES:"+response);
+                            System.out.println("Message sent: "+response);
+                        }
+                        System.out.println("\n");
                     }
                 }
             }
         }
+    }
+
+    private static long fibonnaci(long n) {
+        long[] cache = new long[2];
+        cache[0] = 1;
+        cache[1] = 1;
+        if (n < 2) {
+            return 1;
+        }
+        for (int i = 2; i <=n; i++) {
+            long temp = cache[0] + cache[1];
+            cache[0] = cache[1];
+            cache[1] = temp;
+        }
+
+        return cache[1];
     }
 }
