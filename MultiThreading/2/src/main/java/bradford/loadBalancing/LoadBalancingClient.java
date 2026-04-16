@@ -14,10 +14,11 @@ public class LoadBalancingClient {
     private static final AtomicInteger requestCounter = new AtomicInteger(0);
 
     public static void main(String[] args) throws Exception {
-        if (args.length < 2) {
-            System.err.println("Pass the server IP and the client ID as the command line argument");
+        if (args.length < 1) {
+            System.err.println("Pass the server IP as the sole command line argument");
             return;
         }
+
         Socket socket = new Socket(args[0],59898);
         try (socket) {
             Scanner input = new Scanner(System.in);
@@ -26,7 +27,8 @@ public class LoadBalancingClient {
 
             out.println("CLIENT");
 
-            clientId=args[1];
+            System.out.println("Which Id do you want to have ?");
+            clientId = input.nextLine();
 
 
             System.out.println("You can simulate user input with the console");
