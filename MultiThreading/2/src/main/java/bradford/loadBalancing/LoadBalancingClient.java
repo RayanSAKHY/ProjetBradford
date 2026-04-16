@@ -69,7 +69,7 @@ public class LoadBalancingClient {
 
             while (running) {
                 if (input.hasNextLine()) {
-                    String requestId = String.valueOf(requestCounter.incrementAndGet());
+                    String requestId =clientId + "-"+  requestCounter.incrementAndGet();
                     String line = input.nextLine();
                     if (line.isEmpty()) {
                         line = "EMPTY";
