@@ -38,6 +38,7 @@ public class LoadBalancer {
         }
         finally {
             logger.close();
+            System.out.println("The load balancer is shutting down...");
             System.exit(0);
         }
     }
