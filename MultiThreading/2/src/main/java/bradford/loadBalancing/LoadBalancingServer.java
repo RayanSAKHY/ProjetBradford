@@ -20,9 +20,9 @@ public class LoadBalancingServer {
         try (var socket = new Socket(args[0], 59898)) {
             var in = new Scanner(socket.getInputStream());
             var out = new PrintWriter(socket.getOutputStream(), true);
+            out.println("SERVER");
             while (running) {
                 if (in.hasNextLine()) {
-
                     String line = in.nextLine();
                     if (line.equals("end")) {
                         running = false;
@@ -33,10 +33,13 @@ public class LoadBalancingServer {
                     else if (line.equals("upd")) {
                         out.println("UPD:"+nbTask);
                     }
-                    else {
+                    else if (line.startsWith("REQ")) {
                         nbTask++;
+                        String[] request  = line.split(":");
+                        String requestId = request[1];
+                        String data = request[2];
                         try {
-                            long repet = Long.parseLong(line);
+                            long repet = Long.parseLong(data);
 
                             System.out.println("Starting the calculi of fibonacci for "+repet);
                             out.println("LOG:"+socket+"-Calculing fibonacci("+repet+")");
@@ -44,13 +47,13 @@ public class LoadBalancingServer {
 
                             out.println("LOG:"+socket+"-fibonacci("+repet+") = "+result);
                             System.out.println("Fibonacci("+repet+") = "+result);
-                            out.println("RES:"+result);
+                            out.println("RES:"+requestId+":"+result);
                         }
                         catch (NumberFormatException e) {
-                            System.out.println("Message received = "+line);
-                            out.println("LOG:"+socket+"-Message received = "+line);
+                            System.out.println("Message received = "+data);
+                            out.println("LOG:"+socket+"-Message received = "+data);
                             String response ="";
-                            switch (line) {
+                            switch (data) {
                                 case "I lost":
                                     response = "I lost the game";
                                     break;
@@ -61,12 +64,12 @@ public class LoadBalancingServer {
                                     response = "fine I finished it after several hour";
                                     break;
                                 default:
-                                    response = line;
+                                    response = data;
                                     break;
                             }
 
                             out.println("LOG:"+socket+"-Response = "+response);
-                            out.println("MES:"+response);
+                            out.println("MES:"+requestId+":"+response);
                             System.out.println("Message sent: "+response);
                         }
                         System.out.println("\n");
