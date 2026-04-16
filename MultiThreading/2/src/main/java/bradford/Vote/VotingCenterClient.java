@@ -14,6 +14,7 @@ public class VotingCenterClient{
         try (var socket = new Socket(args[0], 59898)) {
             var out = new PrintWriter(socket.getOutputStream(), true);
 
+            //Each parti need to have different name
             List<String> parties = new ArrayList<>() {
                 {
                     add("A");
@@ -34,11 +35,11 @@ public class VotingCenterClient{
     }
 
     public static class VotingCenter{
-        private String centerId;
-        private List<String> parties;
-        private Map<String, Integer> mediumVotes = new HashMap<>();
-        private List<Integer> favorabilityMeter = new ArrayList<>();
-        private Random rand = new Random();
+        private final String centerId;
+        private final List<String> parties;
+        private final Map<String, Integer> mediumVotes = new HashMap<>();
+        private final List<Integer> favorabilityMeter = new ArrayList<>();
+        private final Random rand = new Random();
         int numParty;
 
         public VotingCenter(String centerId, List<String> parties) {

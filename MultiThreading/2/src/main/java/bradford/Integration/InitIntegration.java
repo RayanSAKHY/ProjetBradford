@@ -11,7 +11,7 @@ public class InitIntegration {
         List<Double> fonc = new ArrayList<>();
         System.out.println("THE FUNCTION:");
 
-        System.out.println("Choose the value of each coefficient starting from the unit one and type end to finish your function:");
+        System.out.println("Choose the value of each coefficient starting from the unit one and type \"end\" to finish your function:");
         String input = scanner.nextLine();
         double coef = 0.0;
         int power = 0;
@@ -60,7 +60,15 @@ public class InitIntegration {
             input = scanner.nextLine();
             try {
 
-                range.add(Double.parseDouble(input));
+                double nb = Double.parseDouble(input);
+
+                if (n == 1) {
+                    if (range.get(0)>nb) {
+                        throw new NumberFormatException();
+                    }
+                }
+                range.add(nb);
+
                 n++;
             }
             catch (NumberFormatException e) {

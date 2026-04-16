@@ -35,8 +35,7 @@ public class IntegrationClient {
             this.out = out;
         }
 
-        public String integrate() {
-            StringBuilder output = new StringBuilder();
+        public void integrate() {
             String integrationMethod = "unknown";
             try {
                 String line;
@@ -97,7 +96,6 @@ public class IntegrationClient {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-            return "";
         }
 
     }

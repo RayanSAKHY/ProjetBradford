@@ -16,7 +16,7 @@ public class TrapezoideMethod extends IntegrationMethod {
         double h = (b-a)/nbPoints;
         double sum = 0;
 
-        for (int i = 1; i < nbPoints-1; i++) {
+        for (int i = 1; i <= nbPoints-1; i++) {
             sum += f(a+i*h);
         }
 

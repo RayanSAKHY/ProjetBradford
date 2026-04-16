@@ -19,9 +19,7 @@ public class IntegrationServer {
                 fonc = new ArrayList<>() {
                     {
                         add(1.0);
-                        add(2.0);
-                        add(3.0);
-                        add(4.0);
+                        add(1.0);
                     }
                 };
                 range = new ArrayList<>(2) {
@@ -30,7 +28,7 @@ public class IntegrationServer {
                         add(10.0);
                     }
                 };
-                subDivision = 1000;
+                subDivision = 1000000;
             }
             else {
                 InitIntegration init = new InitIntegration();
