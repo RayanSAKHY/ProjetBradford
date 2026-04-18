@@ -60,12 +60,6 @@ public class GUIQrCode{
         }
     }
 
-    public void show() {
-        if (stage != null) {
-            stage.show();
-        }
-    }
-
     public void updateQrCode(String filepath) {
         loadQrCode(filepath);
     }

@@ -13,8 +13,7 @@ public class ConsoleInput implements UserInput {
     @Override
     public String askInput(String message) {
         System.out.println(message);
-        String reponse = scanner.nextLine();
-        return reponse;
+        return scanner.nextLine();
     }
 
     @Override

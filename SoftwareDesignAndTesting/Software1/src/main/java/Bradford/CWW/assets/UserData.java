@@ -11,10 +11,6 @@ public class UserData {
         addingTestUsers();
     }
 
-    public Map<String,User> getUsers() {
-        return users;
-    }
-
     public void addingTestUsers() {
         users.put("",new User());
         users.put("test",new User("test","azerty"));

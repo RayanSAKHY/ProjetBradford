@@ -13,7 +13,7 @@ public class MainGUI extends Application {
         Scene scene = new Scene(loader.load());
 
         stage.setScene(scene);
-        stage.setTitle("MVC Exemple");
+        stage.setTitle("Simulation");
         stage.show();
     }
 }

@@ -43,7 +43,7 @@ public class Controller {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/MFA.fxml"));
                 Stage stage = new Stage();
                 stage.setScene(new Scene(loader.load()));
-                stage.setTitle("Vérification MFA");
+                stage.setTitle("MFA Verification");
 
                 MFAController controller = loader.getController();
                 controller.setUser(users.getUser(username));

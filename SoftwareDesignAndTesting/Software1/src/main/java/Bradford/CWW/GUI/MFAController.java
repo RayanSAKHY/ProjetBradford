@@ -11,7 +11,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -37,6 +36,7 @@ public class MFAController {
     public void initialize() {
         Image image = new Image(Objects.requireNonNull(getClass().getResource("/fondBlanc.png")).toExternalForm());
         imageView.setImage(image);
+        info.setText("");
     }
 
     public void setUser(User user) {
@@ -48,7 +48,6 @@ public class MFAController {
     private void verifyMFA(javafx.event.ActionEvent event) {
         javafx.scene.control.Button mfaBtn = (javafx.scene.control.Button) event.getSource();
         int choice = 0;
-
 
         switch (mfaBtn.getId()) {
             case "mfaBtn1":
