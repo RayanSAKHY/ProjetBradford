@@ -1,0 +1,53 @@
+[18/04 17:16:23] client1[ -> Message sentSocket[addr=/127.0.0.1,port=59898,localport=56612] -> Message received = sdgdgf
+
+[18/04 17:16:23] Socket[addr=/127.0.0.1,port=59898,localport=56612] -> Response = sdgdgf
+[18/04 17:16:23] load Balancer :client1-1 -> Message sent: sdgdgf
+[18/04 17:16:23] client1 -> Message received
+[18/04 17:16:31] client1 -> Message sent
+[18/04 17:16:31] Socket[addr=/127.0.0.1,port=59898,localport=56605] -> Message received = I lost
+[18/04 17:16:31] Socket[addr=/127.0.0.1,port=59898,localport=56605] -> Response = I lost the game
+[18/04 17:16:31] load Balancer :client1-2 -> Message sent: I lost the game
+[18/04 17:16:31] client1 -> Message received
+[18/04 17:16:34] load balancer: client1-3 -> Empty request
+[18/04 17:16:34] client1 -> Message sent
+[18/04 17:16:35] load balancer: client1-4 -> Empty request
+[18/04 17:16:35] client1 -> Message sent
+[18/04 17:16:41] client1 -> Message sent
+[18/04 17:16:41] Socket[addr=/127.0.0.1,port=59898,localport=56623] -> Calculing fibonacci(31)
+[18/04 17:16:41] Socket[addr=/127.0.0.1,port=59898,localport=56623] -> fibonacci(31) = 2178309
+[18/04 17:16:41] load balancer: client1-5 -> Result Received: 2178309
+[18/04 17:16:41] client1 -> Message received
+[18/04 17:16:44] client1 -> Message sent
+[18/04 17:16:44] Socket[addr=/127.0.0.1,port=59898,localport=56612] -> Calculing fibonacci(42)
+[18/04 17:16:44] Socket[addr=/127.0.0.1,port=59898,localport=56612] -> fibonacci(42) = 433494437
+[18/04 17:16:44] load balancer: client1-6 -> Result Received: 433494437
+[18/04 17:16:44] client1 -> Message received
+[18/04 17:16:46] client2 -> Message sent
+[18/04 17:16:46] Socket[addr=/127.0.0.1,port=59898,localport=56605] -> Message received = dsf
+[18/04 17:16:46] Socket[addr=/127.0.0.1,port=59898,localport=56605] -> Response = dsf
+[18/04 17:16:46] load Balancer :client2-1 -> Message sent: dsf
+[18/04 17:16:46] client2 -> Message received
+[18/04 17:16:47] client2 -> Message sent
+[18/04 17:16:47] Socket[addr=/127.0.0.1,port=59898,localport=56623] -> Message received = sgdb
+[18/04 17:16:47] Socket[addr=/127.0.0.1,port=59898,localport=56623] -> Response = sgdb
+[18/04 17:16:47] load Balancer :client2-2 -> Message sent: sgdb
+[18/04 17:16:47] client2 -> Message received
+[18/04 17:17:04] client2 -> Message sent
+[18/04 17:17:04] Socket[addr=/127.0.0.1,port=59898,localport=56612] -> Message received = qsdfgg
+[18/04 17:17:04] Socket[addr=/127.0.0.1,port=59898,localport=56612] -> Response = qsdfgg
+[18/04 17:17:04] load Balancer :client2-3 -> Message sent: qsdfgg
+[18/04 17:17:04] client2 -> Message received
+[18/04 17:17:12] client1 -> Message sent
+[18/04 17:17:12] Socket[addr=/127.0.0.1,port=59898,localport=56605] -> Message received = fdshk,
+[18/04 17:17:12] Socket[addr=/127.0.0.1,port=59898,localport=56605] -> Response = fdshk,
+[18/04 17:17:12] load Balancer :client1-7 -> Message sent: fdshk,
+[18/04 17:17:12] client1 -> Message received
+[18/04 17:17:33] client1 -> Message sent
+[18/04 17:17:33] Socket[addr=/127.0.0.1,port=59898,localport=56623] -> Message received = ebd
+[18/04 17:17:33] Socket[addr=/127.0.0.1,port=59898,localport=56623] -> Response = ebd
+[18/04 17:17:33] load Balancer :client1-8 -> Message sent: ebd
+[18/04 17:17:33] client1 -> Message received
+[18/04 17:17:36] load balancer: client1-9 -> Simulation ending
+[18/04 17:17:36] Socket[addr=/127.0.0.1,port=59898,localport=56605] -> Server closed
+[18/04 17:17:36] Socket[addr=/127.0.0.1,port=59898,localport=56612] -> Server closed
+[18/04 17:17:36] client2 -> Server closing
